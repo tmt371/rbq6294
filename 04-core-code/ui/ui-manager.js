@@ -138,6 +138,9 @@ export class UIManager {
         // [NEW] Add modal lock class to the main app container
         this.appElement.classList.toggle('is-modal-active', state.ui.isModalActive);
 
+        // [NEW] (v6294 K5) (步驟 1) Add class for chain mode focus
+        this.appElement.classList.toggle('chain-mode-active', state.ui.dualChainMode === 'chain');
+
         const currentProductKey = state.quoteData.currentProduct;
         const currentProductData = state.quoteData.products[currentProductKey];
 

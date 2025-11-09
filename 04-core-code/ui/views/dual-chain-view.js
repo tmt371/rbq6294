@@ -51,6 +51,7 @@ export class DualChainView {
             this._calculateAndStoreDualPrice();
         }
 
+        // [MODIFIED] (v6294 K5) (步驟 6) Also exit mode if newMode is null
         if (!newMode) {
             this.stateService.dispatch(uiActions.setTargetCell(null));
             this.stateService.dispatch(uiActions.clearDualChainInputValue());
@@ -129,6 +130,8 @@ export class DualChainView {
         const valueToSave = value === '' ? null : valueAsNumber;
         this.stateService.dispatch(quoteActions.updateItemProperty(currentTarget.rowIndex, currentTarget.column, valueToSave));
 
+        // [MODIFIED] (v6294 K5) (步驟 5) Automatically exit mode after successful entry
+        this.stateService.dispatch(uiActions.setDualChainMode(null));
         this.stateService.dispatch(uiActions.setTargetCell(null));
         this.stateService.dispatch(uiActions.clearDualChainInputValue());
     }
@@ -156,10 +159,13 @@ export class DualChainView {
         if (dualChainMode === 'chain' && column === 'chain') {
             this.stateService.dispatch(uiActions.setTargetCell({ rowIndex, column: 'chain' }));
 
+            // (步驟 4) Focus logic is now handled here
             setTimeout(() => {
-                const inputBox = document.getElementById('k4-input-display');
-                inputBox?.focus();
-                inputBox?.select();
+                const inputBox = document.getElementById('k5-input-display'); // [MODIFIED] Correct ID 'k5-input-display'
+                if (inputBox) {
+                    inputBox.focus();
+                    inputBox.select();
+                }
             }, 50);
         }
     }

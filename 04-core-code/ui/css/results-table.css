@@ -81,7 +81,9 @@
 
 /* --- Cell States & Special Styles --- */
 .results-table td.target-cell {
-    box-shadow: inset 0 0 0 2px black;
+    /* [MODIFIED] (v6294 K5) Changed from box-shadow to yellow background */
+    background-color: #fffacd;
+    /* box-shadow: inset 0 0 0 2px black; */
 }
 
 .results-table tr.target-row-highlight>td {
@@ -171,6 +173,24 @@
 
 /* Chocolate */
 
+/* --- [NEW] (v6294 K5) Chain Mode Focus --- */
+/* (步驟 1) By default, blur all cells in chain mode */
+.app-container.chain-mode-active .results-table td {
+    filter: blur(2px);
+    opacity: 0.6;
+    pointer-events: none;
+    transition: filter 0.15s ease-out, opacity 0.15s ease-out;
+}
+
+/* (步驟 1) Exception: Un-blur and allow interaction with the 'chain' column */
+.app-container.chain-mode-active .results-table td[data-column="chain"] {
+    filter: none;
+    opacity: 1;
+    pointer-events: auto;
+    cursor: pointer;
+    box-shadow: inset 0 0 0 2px var(--primary-color);
+    /* Highlight the whole column */
+}
 
 /* --- Responsive Adjustments for Mobile Devices --- */
 @media (max-width: 600px) {
