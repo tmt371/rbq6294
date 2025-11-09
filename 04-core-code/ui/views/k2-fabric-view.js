@@ -212,27 +212,29 @@ export class
         }
 
         // 3.B. Conflict exists, show intermediate conflict dialog
+        // [MODIFIED] (v6294 N&C) Update layout, gridTemplateColumns, and add gap
         this.eventAggregator.publish(EVENTS.SHOW_CONFIRMATION_DIALOG, {
             message: 'This quote contains Light-Filter (LF) items. How would you like to proceed?',
             closeOnOverlayClick: false,
-            gridTemplateColumns: '1fr', // Single column for these buttons
+            gridTemplateColumns: '1fr 1fr', // (步驟 1) 2 columns
+            gap: '10px 10px', // (步驟 1) Add gap
             layout: [
-                [
+                [ // (步驟 1) Row 1
                     {
                         type: 'button',
                         text: 'Overwrite LF items (Update All)',
                         className: 'primary-confirm-button',
+                        colspan: 1, // (步驟 1)
                         callback: () => {
                             // User chose to overwrite. Show N&C dialog targeting all items.
                             this._showNCDialog(true); // 'true' means overwrite LF
                             return false; // [FIX] Prevent this dialog from closing
                         }
-                    }
-                ],
-                [
+                    },
                     {
                         type: 'button',
                         text: 'Preserve LF items (Update Non-LF Only)',
+                        colspan: 1, // (步驟 1)
                         callback: () => {
                             // User chose to preserve. Show N&C dialog targeting only non-LF items.
                             this._showNCDialog(false); // 'false' means do not overwrite LF
@@ -240,11 +242,13 @@ export class
                         }
                     }
                 ],
-                [
+                [ // (步驟 1) Row 2
+                    { type: 'text', text: '' }, // Empty cell for spacing
                     {
                         type: 'button',
                         text: 'Cancel',
                         className: 'secondary',
+                        colspan: 1, // (步驟 1)
                         callback: () => {
                             // User cancelled. Just unlock the UI.
                             this.stateService.dispatch(uiActions.setModalActive(false));
@@ -365,29 +369,67 @@ export class
                 ]
             ],
             onOpen: () => {
-                // 5. Setup Enter key navigation
+                // [MODIFIED] (v6294 N&C) (實作步驟 2) Replace focus logic with SSet's logic
+                const confirmButton = document.querySelector('.dialog-overlay .primary-confirm-button');
+
                 inputIds.forEach((id, index) => {
                     const input = document.getElementById(id);
                     if (input) {
-                        input.addEventListener('keydown', (e) => {
-                            if (e.key === 'Enter') {
-                                e.preventDefault();
-                                const nextId = inputIds[index + 1];
-                                if (nextId) {
-                                    document.getElementById(nextId)?.focus();
-                                } else {
-                                    const confirmButton = document.querySelector('.dialog-overlay .primary-confirm-button');
-                                    confirmButton?.focus();
+                        const isFColorInput = (index % 2 !== 0);
+
+                        const focusNext = (isBlur = false) => {
+                            const nextId = inputIds[index + 1];
+                            const nextInput = nextId ? document.getElementById(nextId) : null;
+
+                            if (nextInput) {
+                                nextInput.focus();
+                                // (實作步驟 2) If next input is F-Color and this was a blur/enter/tab, select it.
+                                if (isBlur && (index + 1) % 2 !== 0) {
+                                    nextInput.select();
                                 }
+                                // (實作步驟 2) If next input is F-Name, select it.
+                                if (isBlur && (index + 1) % 2 === 0) {
+                                    nextInput.select();
+                                }
+                            } else {
+                                confirmButton?.focus();
                             }
+                        };
+
+                        input.addEventListener('keydown', (e) => {
+                            if (e.key === 'Enter' || e.key === 'Tab') {
+                                e.preventDefault();
+                                focusNext(true); // Pass true for select
+                            }
+                        });
+
+                        input.addEventListener('blur', (e) => {
+                            // Prevent blur cascade when moving from F-Name to F-Color
+                            const relatedTarget = e.relatedTarget || document.activeElement;
+                            const nextId = inputIds[index + 1];
+                            if (relatedTarget && relatedTarget.id === nextId) {
+                                return;
+                            }
+                            focusNext(true);
                         });
                     }
                 });
+
+                if (confirmButton) {
+                    confirmButton.addEventListener('keydown', (e) => {
+                        if (e.key === 'Enter') {
+                            e.preventDefault();
+                            confirmButton.click();
+                        }
+                    });
+                }
+
+                // Focus the very first input (F-Name)
                 if (inputIds.length > 0) {
                     setTimeout(() => {
                         const firstInput = document.getElementById(inputIds[0]);
                         firstInput?.focus();
-                        firstInput?.select();
+                        firstInput?.select(); // (實作步驟 2) Also select the first F-Name
                     }, 50);
                 }
             }
@@ -523,7 +565,15 @@ export class
                                 focusNext(id, true); // (v6294 SSet) Pass true for select
                             }
                         });
-                        input.addEventListener('blur', () => focusNext(id, true));
+                        input.addEventListener('blur', (e) => {
+                            // Prevent blur cascade when moving from F-Name to F-Color
+                            const relatedTarget = e.relatedTarget || document.activeElement;
+                            const nextId = inputIds[index + 1];
+                            if (relatedTarget && relatedTarget.id === nextId) {
+                                return;
+                            }
+                            focusNext(id, true);
+                        });
                     }
                 });
 
@@ -702,6 +752,10 @@ export class
                                 if (isBlur && (index + 1) % 2 !== 0) {
                                     nextInput.select();
                                 }
+                                // (實作步驟 4) If next input is F-Name, select it.
+                                if (isBlur && (index + 1) % 2 === 0) {
+                                    nextInput.select();
+                                }
                             } else {
                                 confirmButton?.focus();
                             }
@@ -741,7 +795,7 @@ export class
                     setTimeout(() => {
                         const firstInput = document.getElementById(inputIds[0]);
                         firstInput?.focus();
-                        firstInput?.select();
+                        firstInput?.select(); // (實作步驟 4) Also select the first F-Name
                     }, 50);
                 }
             }
