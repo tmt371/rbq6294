@@ -7221,12 +7221,12 @@ body {
 // jest.config.js
 
 export default {
-  // ?Šè¨´ Jest ?¨åŸ·è¡Œæ¸¬è©¦å?ï¼Œä½¿??babel-jest ä¾†è?è­?.js æª”æ?
+  // ?Šè¨´ Jest ?¨åŸ·è¡Œæ¸¬è©¦æ?ï¼Œä½¿??babel-jest ä¾†è?è­?.js æª”æ?
   transform: {
     '^.+\\.js$': 'babel-jest',
   },
-  
-  // æ¸¬è©¦?°å?è¨­ç‚º jsdomï¼Œè??‘å€‘å¯ä»¥ä½¿?¨ç€è¦½?¨ç’°å¢ƒä¸­?„ç‰©ä»?(å¦?window)
+
+  // æ¸¬è©¦?°å?è¨­ç½®??jsdomï¼Œè??‘å€‘å¯ä»¥ä½¿?¨ç€è¦½?¨ç’°å¢ƒä¸­?„ç‰©ä»?(å¦?window)
   testEnvironment: 'jsdom',
 
   // æ¸¬è©¦æª”æ??„åŒ¹?æ¨¡å¼?
@@ -7235,7 +7235,7 @@ export default {
     '**/?(*.)+(spec|test).js'
   ],
 
-  // å°‡é?ç«¯ç? uuid æ¨¡ç? URL ? å??°æœ¬?°å?è£ç? npm å¥—ä»¶ï¼Œä»¥è§?±º Node.js ?°å?ä¸‹ç?å°Žå…¥?é?
+  // å°‡é?ç«¯ç? uuid æ¨¡ç? URL ? å??°æœ¬æ©Ÿå?è£ç? npm å¥—ä»¶ï¼Œä»¥è§?±º Node.js ?°å?ä¸‹ç?å°Žå…¥?é?
   moduleNameMapper: {
     'https://cdn.jsdelivr.net/npm/uuid@9.0.1/dist/esm-browser/index.js': 'uuid',
   },
@@ -7478,18 +7478,20 @@ export default {
 /**
  * @description
  * AppContext ?¯æ­¤?‰ç”¨ç¨‹å??„ã€Œä?è³´æ³¨?¥å®¹?¨ã€?DI Container)??
- * å®ƒç??·è²¬?¯ã€Œå»ºç«‹ã€å??Œè¨»?Šã€æ??‰æ???(Services) ??UI ?ƒä»¶ (Components)??
- * * 1. å»ºç? Services (ä¾‹å? StateService, CalculationService)??
+ * å®ƒç??·è²¬?¯ã€Œå»ºç«‹ã€ä¸¦è¨»å??Œæ??‰æ???(Services) ??UI ?ƒä»¶ (Components)?ã€?
+ * 1. å»ºç? Services (ä¾‹å? StateService, CalculationService)??
  * 2. å»ºç? UI Components (ä¾‹å? QuickQuoteView, RightPanelComponent)??
- * 3. å°‡é€™ä?å¯¦ä? (instances) ?²å??¨ä??‹ä¸­å¤®ç™»?„æ? (this.instances) ä¸­ã€?
- * * ?™ç¨®æ¨¡å??„å¥½??(ä¾è³´æ³¨å…¥):
- * - ?Œè§£?¦ã€? ?ƒä»¶ä¸é?è¦çŸ¥?“å?ä½•ã€Œå»ºç«‹ã€å??‘ç?ä¾è³´??
- * ä¾‹å?ï¼Œ`AppController` ä¸é?è¦?`new WorkflowService()`?‚å??ªé?è¦å? AppContext?Œè?æ±‚ã€ä???`workflowService` å¯¦ä???
- * - ?Œå¯æ¸¬è©¦?§ã€? ?¨é€²è??®å?æ¸¬è©¦?‚ï??‘å€‘å¯ä»¥è??“åœ°?¨ã€Œå??„ã€?mock) ?å??¿æ???AppContext ä¸­ç??Ÿå¯¦?å???
- * - ?Œé?ä¸­ç®¡?†ã€? ?€?‰ç‰©ä»¶ç?å»ºç??è¼¯?½é?ä¸­åœ¨æ­¤è?ï¼Œæ??¼ç®¡?†å?ç¶­è­·??
- * * Example:
+ * 3. å°‡é€™ä?å¯¦ä? (instances) ä¿å??¨ä??‹ä¸­å¤®ç™»è¨˜è? (this.instances) ä¸­ã€?
+ *
+ * ?™ç¨®æ¨¡å??„å¥½??(ä¾è³´æ³¨å…¥):
+ * - ?Œè§£?¦ã€ï??ƒä»¶ä¸é?è¦çŸ¥?“ã€Œå?ä½•ã€å»ºç«‹ã€Œå??ç?ä¾è³´??
+ * ä¾‹å?ï¼Œ`AppController` ä¸é?è¦?`new WorkflowService()`ï¼Œå??ªé?è¦å? AppContext?Œè?æ±‚ã€ä???`workflowService` å¯¦ä???
+ * - ?Œå¯æ¸¬è©¦?§ã€ï??¨é€²è??®å?æ¸¬è©¦?‚ï??‘å€‘å¯ä»¥è??“åœ°?Œæ¨¡?¬ã€?mock) ä¸¦æ›¿??AppContext ä¸­ç??Ÿå¯¦?å???
+ * - ?Œé?ä¸­ç®¡?†ã€ï??€?‰ç‰©ä»¶ç?å»ºç??è¼¯?½é?ä¸­åœ¨æ­¤è?ï¼Œæ??¼ç®¡?†å?ç¶­è­·??
+ *
+ * Example:
  * `main.js` (çµ„è?å»? ?ƒè?æ±?AppContext å»ºç??€?‰é›¶ä»?(Services, Components)ï¼?
- * ?¶å?å°‡é€™ä??¶ä»¶ (ä¾‹å? `quickQuoteView`, `appController`) äº¤çµ¦ `UIManager` (ç¸½æ??? ?²è?çµ„è??Œæ¸²?“ã€?
+ * ?¶å?å°‡é€™ä??¶ä»¶ (ä¾‹å? `quickQuoteView`, `appController`) äº¤çµ¦ `UIManager` (ç¸½æ??? ?»ç?è£ä¸¦æ¸²æ???
  * */
 export class AppContext {
     constructor() {
@@ -7498,7 +7500,7 @@ export class AppContext {
 
     /**
      * è¨»å?ä¸€?‹å¯¦ä¾‹åˆ°å®¹å™¨ä¸­ã€?
-     * @param {string} name - å¯¦ä??„å”¯ä¸€?ç¨± (????
+     * @param {string} name - å¯¦ä??„å”¯ä¸€?ç¨± (key)
      * @param {object} instance - è¦è¨»?Šç?å¯¦ä???
      */
     register(name, instance) {
@@ -7507,7 +7509,7 @@ export class AppContext {
     }
 
     /**
-     * å¾žå®¹?¨ä¸­?²å?ä¸€?‹å¯¦ä¾‹ã€?
+     * å¾žå®¹?¨ä¸­?–å?ä¸€?‹å¯¦ä¾‹ã€?
      * @param {string} name - è¦ç²?–ç?å¯¦ä??ç¨±??
      * @returns {object} - è¨»å??„å¯¦ä¾‹ã€?
      */
@@ -7589,6 +7591,9 @@ export class AppContext {
         // --- [NEW] Instantiate K2 Tab Components (Phase 5 Refactor) ---
         const k2TabInputHandler = new K2TabInputHandler({ eventAggregator });
         this.register('k2TabInputHandler', k2TabInputHandler);
+        // [NEW] (v6294) Instantiate the new K2 component
+        const k2TabComponent = new K2TabComponent();
+        this.register('k2TabComponent', k2TabComponent);
 
         // --- [NEW] Instantiate K3 Tab Components (Phase 2 Refactor) ---
         const k3TabInputHandler = new K3TabInputHandler({ eventAggregator });
@@ -7748,6 +7753,7 @@ import { DOM_IDS } from './config/constants.js'; // [MODIFIED]
 import { K1TabInputHandler } from './ui/tabs/k1-tab/k1-tab-input-handler.js';
 import { K1TabComponent } from './ui/tabs/k1-tab/k1-tab-component.js';
 import { K2TabInputHandler } from './ui/tabs/k2-tab/k2-tab-input-handler.js'; // [NEW]
+import { K2TabComponent } from './ui/tabs/k2-tab/k2-tab-component.js'; // [NEW] (v6294)
 import { K3TabInputHandler } from './ui/tabs/k3-tab/k3-tab-input-handler.js';
 import { K3TabComponent } from './ui/tabs/k3-tab/k3-tab-component.js';
 import { K4TabInputHandler } from './ui/tabs/k4-tab/k4-tab-input-handler.js';
@@ -7822,7 +7828,6 @@ export class AppController {
                 this.detailConfigView[handlerName](data);
             }
         };
-
         this.eventAggregator.subscribe(EVENTS.TABLE_CELL_CLICKED, (data) => {
             const { ui } = this.stateService.getState();
             if (ui.currentView === 'QUICK_QUOTE') {
@@ -7846,6 +7851,8 @@ export class AppController {
         // this.eventAggregator.subscribe(EVENTS.PANEL_INPUT_ENTER_PRESSED, (data) => delegate('handlePanelInputEnter', data));
         // this.eventAggregator.subscribe(EVENTS.PANEL_INPUT_BLURRED, (data) => delegate('handlePanelInputBlur', data));
         this.eventAggregator.subscribe(EVENTS.LOCATION_INPUT_ENTER_PRESSED, (data) => delegate('handleLocationInputEnter', data));
+        // [NEW] (v6294) Add subscription for K2 mode toggle
+        this.eventAggregator.subscribe(EVENTS.USER_TOGGLED_K2_MODE, (data) => delegate('handleModeToggle', data));
         // [REMOVED] (Phase 3 Cleanup) Obsolete K2 mode events
         // this.eventAggregator.subscribe(EVENTS.USER_REQUESTED_LF_EDIT_MODE, () => delegate('handleLFEditRequest'));
         this.eventAggregator.subscribe(EVENTS.USER_REQUESTED_LF_DELETE_MODE, () => delegate('handleLFDeleteRequest'));
@@ -8125,8 +8132,7 @@ class App {
                 link.href = url;
                 document.head.appendChild(link);
             } catch (error) {
-                console.error(`Failed to load CSS 
-from ${url}:`, error);
+                console.error(`Failed to load CSS from ${url}:`, error);
             }
         };
 
@@ -8194,10 +8200,12 @@ from ${url}:`, error);
         const rightPanelComponent = this.appContext.get('rightPanelComponent');
         const leftPanelTabManager = this.appContext.get('leftPanelTabManager'); // [NEW] Get LeftPanelTabManager
         const k1TabComponent = this.appContext.get('k1TabComponent'); // [NEW] Get K1 component
+        const k2TabComponent = this.appContext.get('k2TabComponent'); // [NEW] (v6294) Get K2 component
         const k3TabComponent =
             this.appContext.get('k3TabComponent'); // [NEW] Get K3 component
         const k4TabComponent = this.appContext.get('k4TabComponent'); // [NEW] Get K4 component
         const k5TabComponent = this.appContext.get('k5TabComponent'); // [NEW] Get K5 component
+
 
         // [REMOVED]
 
@@ -8210,6 +8218,7 @@ from ${url}:`, error);
             rightPanelComponent,
             leftPanelTabManager, // [NEW] Inject LeftPanelTabManager
             k1TabComponent, // [NEW] Inject K1 component
+            k2TabComponent, // [NEW] (v6294) Inject K2 component
             k3TabComponent, // [NEW] Inject K3 component
             k4TabComponent, // [NEW] Inject K4 component
 
@@ -8785,6 +8794,7 @@ export const EVENTS = {
     USER_REQUESTED_NC_DIALOG: 'userRequestedNCDialog',
     USER_REQUESTED_LF_DIALOG: 'userRequestedLFDialog', // [NEW] (Phase 2)
     USER_REQUESTED_SSET_DIALOG: 'userRequestedSSetDialog', // [NEW] (Phase 3)
+    USER_TOGGLED_K2_MODE: 'userToggledK2Mode', // [NEW] (v6294)
     // [REMOVED] (Phase 3 Cleanup) Obsolete panel events
     // PANEL_INPUT_ENTER_PRESSED: 'panelInputEnterPressed',
     // PANEL_INPUT_BLURRED: 'panelInputBlurred',
@@ -12924,13 +12934,14 @@ import { EVENTS, DOM_IDS } from '../config/constants.js';
 import { LeftPanelTabManager } from './left-panel-tab-manager.js';
 
 export class UIManager {
-    constructor({ appElement, eventAggregator, calculationService, rightPanelComponent, leftPanelTabManager, k1TabComponent, k3TabComponent, k4TabComponent, k5TabComponent }) { // [MODIFIED]
+    constructor({ appElement, eventAggregator, calculationService, rightPanelComponent, leftPanelTabManager, k1TabComponent, k2TabComponent, k3TabComponent, k4TabComponent, k5TabComponent }) { // [MODIFIED]
         this.appElement = appElement;
         this.eventAggregator = eventAggregator;
         this.calculationService = calculationService;
         this.rightPanelComponent = rightPanelComponent; // [MODIFIED] Receive instance
         this.leftPanelTabManager = leftPanelTabManager; // [NEW] Store instance
         this.k1TabComponent = k1TabComponent; // [NEW] Store instance
+        this.k2TabComponent = k2TabComponent; // [NEW] (v6294) Store instance
         this.k3TabComponent = k3TabComponent; // [NEW] Store instance
         this.k4TabComponent = k4TabComponent; // [NEW] Store instance
         this.k5TabComponent = k5TabComponent; // [NEW] Store instance
@@ -13050,6 +13061,9 @@ export class UIManager {
         // [NEW] Add modal lock class to the main app container
         this.appElement.classList.toggle('is-modal-active', state.ui.isModalActive);
 
+        // [NEW] (v6294 K5) (æ­¥é? 1) Add class for chain mode focus
+        this.appElement.classList.toggle('chain-mode-active', state.ui.dualChainMode === 'chain');
+
         const currentProductKey = state.quoteData.currentProduct;
         const currentProductData = state.quoteData.products[currentProductKey];
 
@@ -13063,7 +13077,10 @@ export class UIManager {
         if (this.k1TabComponent) {
             this.k1TabComponent.render(state.ui); // Renders K1
         }
-
+        // [NEW] (v6294) Render K2 component
+        if (this.k2TabComponent) {
+            this.k2TabComponent.render(state.ui); // Renders K2
+        }
         if (this.k3TabComponent) {
             this.k3TabComponent.render(state.ui); // Renders K3
         }
@@ -13851,7 +13868,9 @@ export class UIManager {
 
 /* --- Cell States & Special Styles --- */
 .results-table td.target-cell {
-    box-shadow: inset 0 0 0 2px black;
+    /* [MODIFIED] (v6294 K5) Changed from box-shadow to yellow background */
+    background-color: #fffacd;
+    /* box-shadow: inset 0 0 0 2px black; */
 }
 
 .results-table tr.target-row-highlight>td {
@@ -13941,6 +13960,24 @@ export class UIManager {
 
 /* Chocolate */
 
+/* --- [NEW] (v6294 K5) Chain Mode Focus --- */
+/* (æ­¥é? 1) By default, blur all cells in chain mode */
+.app-container.chain-mode-active .results-table td {
+    filter: blur(2px);
+    opacity: 0.6;
+    pointer-events: none;
+    transition: filter 0.15s ease-out, opacity 0.15s ease-out;
+}
+
+/* (æ­¥é? 1) Exception: Un-blur and allow interaction with the 'chain' column */
+.app-container.chain-mode-active .results-table td[data-column="chain"] {
+    filter: none;
+    opacity: 1;
+    pointer-events: auto;
+    cursor: pointer;
+    box-shadow: inset 0 0 0 2px var(--primary-color);
+    /* Highlight the whole column */
+}
 
 /* --- Responsive Adjustments for Mobile Devices --- */
 @media (max-width: 600px) {
@@ -16743,6 +16780,58 @@ export class K1TabInputHandler {
  </div>
 --- FILE END ---
 
+--- FILE START: 04-core-code/ui/tabs/k2-tab/k2-tab-component.js ---
+// File: 04-core-code/ui/tabs/k2-tab/k2-tab-component.js
+
+/**
+ * @fileoverview [NEW] A dedicated component for managing and rendering the K2 (Fabric) tab UI,
+ * specifically the active/disabled states of its buttons.
+ */
+export class K2TabComponent {
+    constructor() {
+        // Cache all DOM elements for K2 in the constructor.
+        this.ncButton = document.getElementById('btn-focus-fabric');
+        this.lfButton = document.getElementById('btn-light-filter');
+        this.lfdButton = document.getElementById('btn-lf-del');
+        this.ssetButton = document.getElementById('btn-k2-sset');
+
+        console.log("K2TabComponent Initialized.");
+    }
+
+    render(uiState) {
+        if (!this.ncButton) return; // Guard clause if elements aren't ready
+
+        const { activeEditMode } = uiState;
+
+        // Define our specific K2 modes
+        const isLFMode = activeEditMode === 'K2_LF_MODE';
+        const isLFDMode = activeEditMode === 'K2_LF_DELETE_SELECT';
+        const isSSetMode = activeEditMode === 'K2_SSET_MODE'; // [NEW] (v6294 SSet)
+
+        // Is *any* K2 mode active?
+        const isK2ModeActive = isLFMode || isLFDMode || isSSetMode; // [MODIFIED] (v6294 SSet)
+
+        // Is *another* panel mode active (like K1, K3, K4, K5)?
+        const isOtherPanelModeActive = activeEditMode !== null && !isK2ModeActive;
+
+        // Handle LF Button (New Active State)
+        this.lfButton.classList.toggle('active', isLFMode);
+        this.lfButton.disabled = (isK2ModeActive && !isLFMode) || isOtherPanelModeActive;
+
+        // Handle LFD Button (Existing Active State)
+        this.lfdButton.classList.toggle('active', isLFDMode);
+        this.lfdButton.disabled = (isK2ModeActive && !isLFDMode) || isOtherPanelModeActive;
+
+        // Handle SSet Button (New Active State) [NEW] (v6294 SSet)
+        this.ssetButton.classList.toggle('active', isSSetMode);
+        this.ssetButton.disabled = (isK2ModeActive && !isSSetMode) || isOtherPanelModeActive;
+
+        // Handle N&C Button (Disabled only)
+        this.ncButton.disabled = isK2ModeActive || isOtherPanelModeActive;
+    }
+}
+--- FILE END ---
+
 --- FILE START: 04-core-code/ui/tabs/k2-tab/k2-tab-input-handler.js ---
 // File: 04-core-code/ui/tabs/k2-tab/k2-tab-input-handler.js
 
@@ -16770,14 +16859,15 @@ export class K2TabInputHandler {
         const lfButton = document.getElementById('btn-light-filter');
         if (lfButton) {
             lfButton.addEventListener('click', () => {
-                // [MODIFIED] (Phase 2) Changed event to trigger new dialog flow
-                this.eventAggregator.publish(EVENTS.USER_REQUESTED_LF_DIALOG);
+                // [MODIFIED] (v6294) Changed event to trigger mode toggle
+                this.eventAggregator.publish(EVENTS.USER_TOGGLED_K2_MODE, { mode: 'LF' });
             });
         }
         const lfDelButton = document.getElementById('btn-lf-del');
         if (lfDelButton) {
             lfDelButton.addEventListener('click', () => {
-                this.eventAggregator.publish(EVENTS.USER_REQUESTED_LF_DELETE_MODE);
+                // [MODIFIED] (v6294) Changed event to trigger mode toggle
+                this.eventAggregator.publish(EVENTS.USER_TOGGLED_K2_MODE, { mode: 'LFD' });
             });
         }
 
@@ -16785,8 +16875,8 @@ export class K2TabInputHandler {
         const sSetButton = document.getElementById('btn-k2-sset');
         if (sSetButton) {
             sSetButton.addEventListener('click', () => {
-                // [MODIFIED] Changed event to trigger new dialog flow
-                this.eventAggregator.publish(EVENTS.USER_REQUESTED_SSET_DIALOG);
+                // [MODIFIED] (v6294 SSet) Changed event to trigger mode toggle
+                this.eventAggregator.publish(EVENTS.USER_TOGGLED_K2_MODE, { mode: 'SSet' });
             });
         }
 
@@ -17103,6 +17193,12 @@ export class K4TabInputHandler {
 --- FILE START: 04-core-code/ui/tabs/k4-tab/k4-tab.css ---
 /* File: 04-core-code/ui/tabs/k4-tab/k4-tab.css */
 
+/* [NEW] (v6294) Fix layout bug by forcing all inputs to respect the grid */
+#k4-content .panel-input {
+    width: 100%;
+    box-sizing: border-box;
+}
+
 /* --- K4 Styles (Moved from left-panel.css) --- */
 /* Note: These styles are now CORRECTED to use k4- class names */
 #k4-content .feature-buttons {
@@ -17377,6 +17473,12 @@ export class K5TabInputHandler {
 --- FILE START: 04-core-code/ui/tabs/k5-tab/k5-tab.css ---
 /* File: 04-core-code/ui/tabs/k5-tab/k5-tab.css */
 
+/* [NEW] (v6294) Fix layout bug by forcing all inputs to respect the grid */
+#k5-content .panel-input {
+    width: 100%;
+    box-sizing: border-box;
+}
+
 /* --- K5 Styles (Moved from left-panel.css) --- */
 /* [MODIFIED] Corrected all 'k4-' to 'k5-' */
 #k5-input-display {
@@ -17416,8 +17518,7 @@ export class K5TabInputHandler {
     background-color: #cffde1;
 }
 
-/* --- K5 Panel (formerly K4) Styles (Moved from 
-left-panel.css) --- */
+/* --- K5 Panel (formerly K4) Styles (Moved from left-panel.css) --- */
 .k5-grid-layout {
     display: flex;
     flex-direction: column;
@@ -17640,9 +17741,8 @@ export class DetailConfigView {
         const { ui } = this.stateService.getState();
         const { activeEditMode } = ui;
 
-        // [MODIFIED] (Phase 3 Cleanup)
-        // Only check for the remaining OLD K2 modes (LF-Del)
-        if (activeEditMode === 'K2_LF_DELETE_SELECT') {
+        // [MODIFIED] (v6294 SSet) Check for all K2 modes (LF, LFD, SSet)
+        if (activeEditMode === 'K2_LF_DELETE_SELECT' || activeEditMode === 'K2_LF_MODE' || activeEditMode === 'K2_SSET_MODE') {
             this.k2View.handleSequenceCellClick({ rowIndex });
         } else {
             // [NEW] DEFAULT BEHAVIOR (for new LF/SSet flows):
@@ -17652,14 +17752,15 @@ export class DetailConfigView {
         }
     }
 
-    // [REMOVED] (Phase 3 Cleanup)
-    // handleLFEditRequest() {
-    //     this.k2View.handleLFEditRequest();
-    // }
-
-    handleLFDeleteRequest() {
-        this.k2View.handleLFDeleteRequest();
+    // [NEW] (v6294) Handle the new K2 mode toggle event
+    handleModeToggle({ mode }) {
+        this.k2View.handleModeToggle({ mode });
     }
+
+    // [REMOVED] (v6294) This is now handled by handleModeToggle
+    // handleLFDeleteRequest() {
+    //     this.k2View.handleLFDeleteRequest();
+    // }
 
     // [REMOVED] (Phase 3 Cleanup)
     // handleSSetRequest() {
@@ -17985,6 +18086,7 @@ export class DualChainView {
             this._calculateAndStoreDualPrice();
         }
 
+        // [MODIFIED] (v6294 K5) (æ­¥é? 6) Also exit mode if newMode is null
         if (!newMode) {
             this.stateService.dispatch(uiActions.setTargetCell(null));
             this.stateService.dispatch(uiActions.clearDualChainInputValue());
@@ -18063,6 +18165,8 @@ export class DualChainView {
         const valueToSave = value === '' ? null : valueAsNumber;
         this.stateService.dispatch(quoteActions.updateItemProperty(currentTarget.rowIndex, currentTarget.column, valueToSave));
 
+        // [MODIFIED] (v6294 K5) (æ­¥é? 5) Automatically exit mode after successful entry
+        this.stateService.dispatch(uiActions.setDualChainMode(null));
         this.stateService.dispatch(uiActions.setTargetCell(null));
         this.stateService.dispatch(uiActions.clearDualChainInputValue());
     }
@@ -18090,10 +18194,13 @@ export class DualChainView {
         if (dualChainMode === 'chain' && column === 'chain') {
             this.stateService.dispatch(uiActions.setTargetCell({ rowIndex, column: 'chain' }));
 
+            // (æ­¥é? 4) Focus logic is now handled here
             setTimeout(() => {
-                const inputBox = document.getElementById('k4-input-display');
-                inputBox?.focus();
-                inputBox?.select();
+                const inputBox = document.getElementById('k5-input-display'); // [MODIFIED] Correct ID 'k5-input-display'
+                if (inputBox) {
+                    inputBox.focus();
+                    inputBox.select();
+                }
             }, 50);
         }
     }
@@ -18293,7 +18400,6 @@ export class F1CostView {
 
         // [NEW] (F1/F2 Refactor Phase 2) Dispatch the calculated totals to the central state
         this.stateService.dispatch(uiActions.setF1CostTotals(subTotal, finalTotal));
-
         this.f1.displays.price['sub-total'].textContent = formatPrice(subTotal);
         this.f1.displays.price.gst.textContent = formatPrice(gst);
         this.f1.displays.price['final-total'].textContent = formatPrice(finalTotal);
@@ -18302,7 +18408,9 @@ export class F1CostView {
     activate() {
         this.eventAggregator.publish(EVENTS.F1_TAB_ACTIVATED);
 
-        // [NEW] Focus on the discount input when the tab is activated.
+        // [MODIFIED] (v6294) (?¤éŠ·ç¬?12 æ¬¡ç·¨ä¿?
+        // ?¢å¾© F1 ?¨æ??‰è?ç½®ä??„è‡ª?•è??¦å??½ï?ä½¿å…¶??F2 ?„è??ºä??´ã€?
+        // if (!window.matchMedia("(max-width: 600px)").matches) {
         setTimeout(() => {
             const discountInput = this.f1.inputs.discount;
             if (discountInput) {
@@ -18310,6 +18418,7 @@ export class F1CostView {
                 discountInput.select();
             }
         }, 50); // A small delay ensures the element is visible and focusable.
+        // }
     }
 
     // --- [NEW] Methods migrated from WorkflowService ---
@@ -18319,7 +18428,7 @@ export class F1CostView {
         const totalRemoteCount = ui.driveRemoteCount || 0;
 
         const initial1ch = ui.f1.remote_1ch_qty;
-        const initial16ch = (ui.f1.remote_16ch_qty === null) ? totalRemoteCount - initial1ch : ui.f1.remote_16ch_qty;
+        const initial16ch = (ui.f1.remote_1ch_qty === null) ? totalRemoteCount - initial1ch : ui.f1.remote_16ch_qty;
 
         this.eventAggregator.publish(EVENTS.SHOW_CONFIRMATION_DIALOG, {
             message: `Total remotes: ${totalRemoteCount}. Please distribute them.`,
@@ -18437,7 +18546,6 @@ export class F1CostView {
             onOpen: () => {
                 const inputCombo = document.getElementById(DOM_IDS.DIALOG_INPUT_COMBO);
                 const inputSlim = document.getElementById(DOM_IDS.DIALOG_INPUT_SLIM);
-
                 inputSlim.addEventListener('input', () => {
                     const qtySlim = parseInt(inputSlim.value, 10);
                     if (!isNaN(qtySlim) && qtySlim >= 0 && qtySlim <= totalDualPairs) {
@@ -18479,11 +18587,16 @@ export class F2SummaryView {
         this.stateService = stateService;
         this.calculationService = calculationService;
 
-        // [MODIFIED] (Phase 12 & 13)
+        // [MODIFIED] (v6294) Updated to new 8-step focus order
         this.f2InputSequence = [
-            'f2-b14-install-qty', 'f2-b10-wifi-qty', 'f2-b13-delivery-qty',
-            'f2-b15-removal-qty', 'f2-b17-mul-times', 'f2-b18-discount',
-            'new-offer', 'f2-deposit' // 'f2-balance' is readonly, so no focus
+            'f2-b10-wifi-qty',
+            'f2-b13-delivery-qty',
+            'f2-b14-install-qty',
+            'f2-b15-removal-qty',
+            'f2-b17-mul-times',
+            'f2-b18-discount',
+            'new-offer',
+            'f2-deposit' // 'f2-balance' is readonly, so no focus
         ];
 
         this._cacheF2Elements();
@@ -18554,13 +18667,11 @@ export class F2SummaryView {
             }
         };
 
-        const f2Inputs = [
-            this.f2.b10_wifiQty, this.f2.b13_deliveryQty, this.f2.b14_installQty,
-            this.f2.b15_removalQty, this.f2.b17_mulTimes, this.f2.b18_discount,
-            this.f2.new_offer, // [NEW] Add listener for new-offer
-            this.f2.deposit // [NEW] v6290 Add listener for deposit
-        ];
-        f2Inputs.forEach(input => setupF2InputListener(input));
+        // [MODIFIED] (v6294) Use the new sequence array to apply listeners
+        this.f2InputSequence.forEach(inputId => {
+            const inputElement = this.f2[inputId.replace(/-/g, '_')] || document.getElementById(inputId);
+            setupF2InputListener(inputElement);
+        });
 
         const feeCells = [
 
@@ -18616,7 +18727,6 @@ export class F2SummaryView {
         const deliveryFee = f2State.deliveryFee || 0;
         const installFee = f2State.installFee || 0;
         const removalFee = f2State.removalFee || 0;
-
         const acceSum = winderPrice + dualPrice;
         const eAcceSum = motorPrice + remotePrice + chargerPrice + cordPrice + wifiSum;
         const surchargeFee =
@@ -18683,7 +18793,6 @@ export class F2SummaryView {
         const { updatedQuoteData } = this.calculationService.calculateAndSum(quoteData, productStrategy);
 
         this.stateService.dispatch(quoteActions.setQuoteData(updatedQuoteData));
-
         // [NEW] (Phase 12) Auto-populate install Qty if it's null
         if (ui.f2.installQty === null) {
             // We use updatedQuoteData.products... to get the most current item list
@@ -18697,8 +18806,8 @@ export class F2SummaryView {
 
         this._calculateF2Summary();
 
-        // [MODIFIED] (Phase 12) Change focus to install Qty
-        this.eventAggregator.publish(EVENTS.FOCUS_ELEMENT, { elementId: 'f2-b14-install-qty' });
+        // [MODIFIED] (v6294) Change focus to wifi Qty on all devices
+        this.eventAggregator.publish(EVENTS.FOCUS_ELEMENT, { elementId: 'f2-b10-wifi-qty' });
     }
 
     // --- [NEW] Methods migrated from WorkflowService ---
@@ -19291,9 +19400,9 @@ export class
         // [NEW] Listen for the new N&C dialog event
         this.eventAggregator.subscribe(EVENTS.USER_REQUESTED_NC_DIALOG, () => this.handleNCDialogRequest());
         // [NEW] (Phase 2) Listen for the new LF dialog event
-        this.eventAggregator.subscribe(EVENTS.USER_REQUESTED_LF_DIALOG, () => this.handleLFDialogRequest());
+        this.eventAggregator.subscribe(EVENTS.USER_REQUESTED_LF_DIALOG, () => this._showLFDialog()); // [MODIFIED] (v6294) Renamed for clarity
         // [NEW] (Phase 3) Listen for the new SSet dialog event
-        this.eventAggregator.subscribe(EVENTS.USER_REQUESTED_SSET_DIALOG, () => this.handleSSetDialogRequest());
+        this.eventAggregator.subscribe(EVENTS.USER_REQUESTED_SSET_DIALOG, () => this._showSSetDialog()); // [MODIFIED] (v6294 SSet) Renamed
 
         console.log("K2FabricView Initialized.");
     }
@@ -19335,46 +19444,134 @@ export class
         const item = this._getItems()[rowIndex];
         if (!item || (item.width === null && item.height === null)) return; // Ignore empty rows
 
-        // [MODIFIED] (Phase 3 Cleanup) Only LF_DELETE_SELECT logic remains
+        // [MODIFIED] (v6294 SSet) This handler now manages selection for LF, LFD, and SSet modes.
         if (activeEditMode === 'K2_LF_DELETE_SELECT') {
-
+            // --- LFD Mode (Select items to delete) ---
             const { lfModifiedRowIndexes } = this._getState().quoteData.uiMetadata;
             if (!lfModifiedRowIndexes.includes(rowIndex)) {
                 this.eventAggregator.publish(EVENTS.SHOW_NOTIFICATION, { message: 'Only items with a Light-Filter setting (pink background) can be selected for deletion.', type: 'error' });
                 return;
             }
+            // Use the dedicated LF selection state for LFD mode
             this.stateService.dispatch(uiActions.toggleLFSelection(rowIndex));
 
+        } else if (activeEditMode === 'K2_LF_MODE' || activeEditMode === 'K2_SSET_MODE') {
+            // --- LF Mode & SSet Mode (Select items to apply to) ---
+            // (å¯¦ä?æ­¥é? 3) Use the main multi-select state
+            this.stateService.dispatch(uiActions.toggleMultiSelectSelection(rowIndex));
         }
         // [REMOVED] (Phase 3 Cleanup) K2_LF_SELECT logic removed
         // [REMOVED] (Phase 3 Cleanup) K2_SSET_SELECT logic removed
     }
 
-    // [REMOVED] (Phase 3 Cleanup)
-    // handleLFEditRequest() { ... }
+    // [NEW] (v6294) Entry point for mode-switching buttons (LF, LFD, SSet)
+    handleModeToggle({ mode }) {
+        if (mode === 'LF') {
+            this._handleLFModeToggle();
+        } else if (mode === 'LFD') {
+            this._handleLFDModeToggle();
+        } else if (mode === 'SSet') {
+            this._handleSSetModeToggle();
+        }
+    }
 
-    handleLFDeleteRequest() {
+    // [NEW] (v6294) Implements "click-select-click" for LF button
+    _handleLFModeToggle() {
+        const { activeEditMode } = this._getState().ui;
+
+        if (activeEditMode === 'K2_LF_MODE') {
+            // --- This is the SECOND click (Execute) ---
+            const { multiSelectSelectedIndexes } = this._getState().ui;
+
+            // (å¯¦ä?æ­¥é? 6)
+            if (multiSelectSelectedIndexes.length === 0) {
+                this.eventAggregator.publish(EVENTS.SHOW_NOTIFICATION, { message: 'LF mode cancelled. No items selected.' });
+                this._exitAllK2Modes(); // Cancel the mode
+                return;
+            }
+
+            // (å¯¦ä?æ­¥é? 4)
+            this._showLFDialog(); // Show the dialog
+
+        } else {
+            // --- This is the FIRST click (Enter Mode) ---
+            // (å¯¦ä?æ­¥é? 1 - æª¢æŸ¥)
+            const items = this._getItems();
+            const eligibleTypes = ['B2', 'B3', 'B4'];
+            const hasEligibleItems = items.some(item =>
+                item.width && item.height && eligibleTypes.includes(item.fabricType)
+            );
+
+            if (!hasEligibleItems) {
+                this.eventAggregator.publish(EVENTS.SHOW_NOTIFICATION, { message: 'LF is only applicable for B2, B3, and B4 items.' });
+                return;
+            }
+
+            // (å¯¦ä?æ­¥é? 1 - ?²å…¥æ¨¡å?)
+            this._exitAllK2Modes(); // Ensure no other mode is active
+            this.stateService.dispatch(uiActions.setActiveEditMode('K2_LF_MODE'));
+            // (å¯¦ä?æ­¥é? 2)
+            this.eventAggregator.publish(EVENTS.SHOW_NOTIFICATION, { message: 'Please select items from the main table.' });
+        }
+    }
+
+    // [REFACTORED] (v6294) Renamed from handleLFDeleteRequest to _handleLFDModeToggle
+    _handleLFDModeToggle() {
         const { activeEditMode } = this._getState().ui;
 
         if (activeEditMode === 'K2_LF_DELETE_SELECT') {
+            // --- This is the SECOND click (Execute) ---
             const { lfSelectedRowIndexes } = this._getState().ui;
             if (lfSelectedRowIndexes.length > 0) {
-
                 this.stateService.dispatch(quoteActions.removeLFProperties(lfSelectedRowIndexes));
                 this.stateService.dispatch(quoteActions.removeLFModifiedRows(lfSelectedRowIndexes));
                 this.eventAggregator.publish(EVENTS.SHOW_NOTIFICATION, { message: 'Light-Filter settings have been cleared.' });
             }
             this._exitAllK2Modes();
         } else {
-            // Clear other K2 mode selections
-            this.stateService.dispatch(uiActions.clearLFSelection());
-            // [REMOVED] (Phase 3 Cleanup) this.stateService.dispatch(uiActions.clearSSetSelection());
+            // --- This is the FIRST click (Enter Mode) ---
+            this._exitAllK2Modes(); // Ensure no other mode is active
             this.stateService.dispatch(uiActions.setActiveEditMode('K2_LF_DELETE_SELECT'));
             this.eventAggregator.publish(EVENTS.SHOW_NOTIFICATION, { message: 'Please select the roller blinds for which you want to cancel the Light-Filter fabric setting. After selection, click the LF-Del button again.' });
         }
     }
 
-    // [REMOVED] (Phase 3 Cleanup) Old Handler for the SSet button
+    // [NEW] (v6294 SSet) Implements "click-select-click" for SSet button
+    _handleSSetModeToggle() {
+        const { activeEditMode } = this._getState().ui;
+
+        if (activeEditMode === 'K2_SSET_MODE') {
+            // --- This is the SECOND click (Execute) ---
+            const { multiSelectSelectedIndexes } = this._getState().ui;
+
+            // (å¯¦ä?æ­¥é? 5)
+            if (multiSelectSelectedIndexes.length === 0) {
+                this.eventAggregator.publish(EVENTS.SHOW_NOTIFICATION, { message: 'SSet mode cancelled. No items selected.' });
+                this._exitAllK2Modes(); // Cancel the mode
+                return;
+            }
+
+            // (å¯¦ä?æ­¥é? 4)
+            this._showSSetDialog(); // Show the dialog
+
+        } else {
+            // --- This is the FIRST click (Enter Mode) ---
+            // (å¯¦ä?æ­¥é? 1)
+            this._exitAllK2Modes(); // Ensure no other mode is active
+            this.stateService.dispatch(uiActions.setActiveEditMode('K2_SSET_MODE'));
+            // (å¯¦ä?æ­¥é? 2)
+            this.eventAggregator.publish(EVENTS.SHOW_NOTIFICATION, { message: 'Please select items from the main table.' });
+        }
+    }
+
+
+    // [REMOVED] (Phase 3 Cleanup)
+    // handleLFEditRequest() { ... }
+
+    // [REMOVED] (v6294) This is now handled by _handleLFDModeToggle
+    // handleLFDeleteRequest() { ... }
+
+    // [REMOVED] (v6294 SSet) Old SSet handler removed, logic moved to _showSSetDialog
     // handleSSetRequest() { ... }
 
     // [MODIFIED] (Stage 2.B) Refactored to handle LF conflict
@@ -19393,27 +19590,29 @@ export class
         }
 
         // 3.B. Conflict exists, show intermediate conflict dialog
+        // [MODIFIED] (v6294 N&C) Update layout, gridTemplateColumns, and add gap
         this.eventAggregator.publish(EVENTS.SHOW_CONFIRMATION_DIALOG, {
-            message: 'æ­¤å ±?¹å–®?…å« Light-Filter (LF) ?…ç›®?‚æ‚¨å¸Œæ?å¦‚ä??•ç?ï¼?,
+            message: 'This quote contains Light-Filter (LF) items. How would you like to proceed?',
             closeOnOverlayClick: false,
-            gridTemplateColumns: '1fr', // Single column for these buttons
+            gridTemplateColumns: '1fr 1fr', // (æ­¥é? 1) 2 columns
+            gap: '10px 10px', // (æ­¥é? 1) Add gap
             layout: [
-                [
+                [ // (æ­¥é? 1) Row 1
                     {
                         type: 'button',
-                        text: 'è¦†è? LF ?…ç›® (?´æ–°?€?‰é???',
+                        text: 'Overwrite LF items (Update All)',
                         className: 'primary-confirm-button',
+                        colspan: 1, // (æ­¥é? 1)
                         callback: () => {
                             // User chose to overwrite. Show N&C dialog targeting all items.
                             this._showNCDialog(true); // 'true' means overwrite LF
                             return false; // [FIX] Prevent this dialog from closing
                         }
-                    }
-                ],
-                [
+                    },
                     {
                         type: 'button',
-                        text: 'ä¿ç? LF ?…ç›® (?…æ›´?°é? LF ?…ç›®)',
+                        text: 'Preserve LF items (Update Non-LF Only)',
+                        colspan: 1, // (æ­¥é? 1)
                         callback: () => {
                             // User chose to preserve. Show N&C dialog targeting only non-LF items.
                             this._showNCDialog(false); // 'false' means do not overwrite LF
@@ -19421,11 +19620,13 @@ export class
                         }
                     }
                 ],
-                [
+                [ // (æ­¥é? 1) Row 2
+                    { type: 'text', text: '' }, // Empty cell for spacing
                     {
                         type: 'button',
-                        text: '?–æ?',
+                        text: 'Cancel',
                         className: 'secondary',
+                        colspan: 1, // (æ­¥é? 1)
                         callback: () => {
                             // User cancelled. Just unlock the UI.
                             this.stateService.dispatch(uiActions.setModalActive(false));
@@ -19466,8 +19667,8 @@ export class
         const sortedTypes = Array.from(eligibleTypes).sort();
         if (sortedTypes.length === 0) {
             const message = overwriteLF
-                ? 'æ²’æ??…ç›®?¯ä?è¦†è???
-                : 'æ²’æ??¯ä?ç·¨è¼¯?„é? LF ?…ç›®??;
+                ? 'No items to overwrite.'
+                : 'No non-LF items available to edit.';
             this.eventAggregator.publish(EVENTS.SHOW_NOTIFICATION, { message: message });
             this.stateService.dispatch(uiActions.setModalActive(false)); // Unlock UI
             return;
@@ -19546,39 +19747,79 @@ export class
                 ]
             ],
             onOpen: () => {
-                // 5. Setup Enter key navigation
+                // [MODIFIED] (v6294 N&C) (å¯¦ä?æ­¥é? 2) Replace focus logic with SSet's logic
+                const confirmButton = document.querySelector('.dialog-overlay .primary-confirm-button');
+
+                // [FIX] (v6294 Bug Fix) Change from (id) to (id, index)
                 inputIds.forEach((id, index) => {
                     const input = document.getElementById(id);
                     if (input) {
-                        input.addEventListener('keydown', (e) => {
-                            if (e.key === 'Enter') {
-                                e.preventDefault();
-                                const nextId = inputIds[index + 1];
-                                if (nextId) {
-                                    document.getElementById(nextId)?.focus();
-                                } else {
-                                    const confirmButton = document.querySelector('.dialog-overlay .primary-confirm-button');
-                                    confirmButton?.focus();
+                        const isFColorInput = (index % 2 !== 0);
+
+                        const focusNext = (isBlur = false) => {
+                            const nextId = inputIds[index + 1];
+                            const nextInput = nextId ? document.getElementById(nextId) : null;
+
+                            if (nextInput) {
+                                nextInput.focus();
+                                // (å¯¦ä?æ­¥é? 2) If next input is F-Color and this was a blur/enter/tab, select it.
+                                if (isBlur && (index + 1) % 2 !== 0) {
+                                    nextInput.select();
                                 }
+                                // (å¯¦ä?æ­¥é? 2) If next input is F-Name, select it.
+                                if (isBlur && (index + 1) % 2 === 0) {
+                                    nextInput.select();
+                                }
+                            } else {
+                                confirmButton?.focus();
                             }
+                        };
+
+                        input.addEventListener('keydown', (e) => {
+                            if (e.key === 'Enter' || e.key === 'Tab') {
+                                e.preventDefault();
+                                focusNext(true); // Pass true for select
+                            }
+                        });
+
+                        input.addEventListener('blur', (e) => {
+                            // Prevent blur cascade when moving from F-Name to F-Color
+                            const relatedTarget = e.relatedTarget || document.activeElement;
+                            const nextId = inputIds[index + 1];
+                            if (relatedTarget && relatedTarget.id === nextId) {
+                                return;
+                            }
+                            focusNext(true);
                         });
                     }
                 });
+
+                if (confirmButton) {
+                    confirmButton.addEventListener('keydown', (e) => {
+                        if (e.key === 'Enter') {
+                            e.preventDefault();
+                            confirmButton.click();
+                        }
+                    });
+                }
+
+                // Focus the very first input (F-Name)
                 if (inputIds.length > 0) {
                     setTimeout(() => {
                         const firstInput = document.getElementById(inputIds[0]);
                         firstInput?.focus();
-                        firstInput?.select();
+                        firstInput?.select(); // (å¯¦ä?æ­¥é? 2) Also select the first F-Name
                     }, 50);
                 }
             }
         });
     }
 
-    // [MODIFIED] (Stage 2.A) Handler for the LF Dialog request
-    handleLFDialogRequest() {
-        // 1. Lock the UI
-        this.stateService.dispatch(uiActions.setModalActive(true));
+    // [MODIFIED] (v6294) Renamed from handleLFDialogRequest to _showLFDialog
+    // Now reads selection from state instead of checking on its own.
+    _showLFDialog() {
+        // 1. Lock the UI (already locked by _handleLFModeToggle)
+        // this.stateService.dispatch(uiActions.setModalActive(true));
 
         // 2. Pre-processing: Check for eligible types IN THE SELECTION
         const { ui, quoteData } = this._getState();
@@ -19586,16 +19827,16 @@ export class
         const { lfModifiedRowIndexes } = quoteData.uiMetadata;
         const items = this._getItems();
 
-        // 2A. Check if anything is selected
+        // 2A. Check if anything is selected (This is already checked by _handleLFModeToggle, but we double-check)
         if (multiSelectSelectedIndexes.length === 0) {
-            this.eventAggregator.publish(EVENTS.SHOW_NOTIFICATION, { message: 'è«‹å??¨ç¬¬ä¸€è¡¨ä¸­?¸å??…ç›®?? });
-            this.stateService.dispatch(uiActions.setModalActive(false));
+            this.eventAggregator.publish(EVENTS.SHOW_NOTIFICATION, { message: 'Please select items from the main table first.' });
+            this._exitAllK2Modes(); // Cancel mode
             return;
         }
 
         const eligibleTypes = ['B2', 'B3', 'B4'];
 
-        // 2B. Filter the selection for eligible items
+        // 2B. (å¯¦ä?æ­¥é? 5) Filter the selection for eligible items
         const eligibleIndexes = multiSelectSelectedIndexes.filter(index => {
             const item = items[index];
             return item && item.width && item.height &&
@@ -19604,11 +19845,9 @@ export class
         });
 
         if (eligibleIndexes.length === 0) {
-            const msg = multiSelectSelectedIndexes.length > 0
-                ? '?¨é¸?–ç??…ç›®ä¸­ä??…å« B2, B3, ??B4 é¡žå?ï¼Œæ?å®ƒå€‘å·²è¢«è¨­??LF??
-                : 'æ²’æ??¯ä?ç·¨è¼¯?„é? LF ?…ç›®??;
+            const msg = 'The selection contains no eligible B2, B3, or B4 items, or they are already set as LF.';
             this.eventAggregator.publish(EVENTS.SHOW_NOTIFICATION, { message: msg });
-            this.stateService.dispatch(uiActions.setModalActive(false)); // Unlock UI
+            this._exitAllK2Modes(); // Cancel mode
             return;
         }
 
@@ -19653,7 +19892,6 @@ export class
                                     // Apply ONLY to eligible selected indexes
                                     this.stateService.dispatch(quoteActions.batchUpdateLFProperties(eligibleIndexes, fabricNameWithPrefix, fColor));
                                     this.stateService.dispatch(quoteActions.addLFModifiedRows(eligibleIndexes));
-                                    this.stateService.dispatch(uiActions.clearMultiSelectSelection()); // Clear selection
                                     this.eventAggregator.publish(EVENTS.SHOW_NOTIFICATION, { message: `Light-Filter applied to ${eligibleIndexes.length} items.` });
                                 } else {
                                     this.eventAggregator.publish(EVENTS.SHOW_NOTIFICATION, { message: 'No changes applied. Both F-Name and F-Color are required.', type: 'error' });
@@ -19664,7 +19902,7 @@ export class
                             } finally {
                                 // Only unlock if successful
                                 if (document.getElementById(fNameId).value && document.getElementById(fColorId).value) {
-                                    this.stateService.dispatch(uiActions.setModalActive(false)); // Unlock UI
+                                    this._exitAllK2Modes(); // Clean up mode and selection
                                 }
                             }
                             // Close dialog only if successful
@@ -19675,46 +19913,73 @@ export class
                         type: 'button', text: 'Cancel', className: 'secondary', colspan: 1,
                         callback: () => {
                             // 5.B Post-processing (Cancel)
-                            this.stateService.dispatch(uiActions.setModalActive(false)); // Unlock UI
+                            // (å¯¦ä?æ­¥é? 7)
+                            this._exitAllK2Modes(); // Clean up mode and selection
                             return true; // Close dialog
                         }
                     }
                 ]
             ],
             onOpen: () => {
-                // 6. Setup Enter key navigation
+                // 6. (å¯¦ä?æ­¥é? 4) Setup Enter/Blur key navigation
+                const fNameInput = document.getElementById(fNameId);
+                const fColorInput = document.getElementById(fColorId);
+                const confirmButton = document.querySelector('.dialog-overlay .primary-confirm-button');
+
+                const focusNext = (currentId, isBlur = false) => {
+                    if (currentId === fNameId) {
+                        fColorInput?.focus();
+                        if (isBlur) fColorInput?.select(); // (v6294 SSet) Only select on blur/tab/enter
+                    } else if (currentId === fColorId) {
+                        confirmButton?.focus();
+                    }
+                };
+
+                // [FIX] (v6294 Bug Fix) Change from (id) to (id, index)
                 inputIds.forEach((id, index) => {
                     const input = document.getElementById(id);
                     if (input) {
                         input.addEventListener('keydown', (e) => {
-                            if (e.key === 'Enter') {
+                            if (e.key === 'Enter' || e.key === 'Tab') {
                                 e.preventDefault();
-                                const nextId = inputIds[index + 1];
-                                if (nextId) {
-                                    document.getElementById(nextId)?.focus();
-                                } else {
-                                    const confirmButton = document.querySelector('.dialog-overlay .primary-confirm-button');
-                                    confirmButton?.focus();
-                                }
+                                focusNext(id, true); // (v6294 SSet) Pass true for select
                             }
+                        });
+                        input.addEventListener('blur', (e) => {
+                            // Prevent blur cascade when moving from F-Name to F-Color
+                            const relatedTarget = e.relatedTarget || document.activeElement;
+                            const nextId = inputIds[index + 1];
+                            if (relatedTarget && relatedTarget.id === nextId) {
+                                return;
+                            }
+                            focusNext(id, true);
                         });
                     }
                 });
+
+                if (confirmButton) {
+                    confirmButton.addEventListener('keydown', (e) => {
+                        if (e.key === 'Enter') {
+                            e.preventDefault();
+                            confirmButton.click();
+                        }
+                    });
+                }
+
                 if (inputIds.length > 0) {
                     setTimeout(() => {
-                        const firstInput = document.getElementById(inputIds[0]);
-                        firstInput?.focus();
-                        firstInput?.select();
+                        fNameInput?.focus();
+                        fNameInput?.select();
                     }, 50);
                 }
             }
         });
     }
 
-    // [NEW] (Phase 3) Handler for the SSet Dialog request
-    handleSSetDialogRequest() {
-        // 1. Lock the UI
-        this.stateService.dispatch(uiActions.setModalActive(true));
+    // [REFACTORED] (v6294 SSet) Renamed from handleSSetDialogRequest to _showSSetDialog
+    _showSSetDialog() {
+        // 1. Lock the UI (already locked by _handleSSetModeToggle)
+        // this.stateService.dispatch(uiActions.setModalActive(true));
 
         // 2. Pre-processing: Check for eligible types IN THE SELECTION
         const { ui, quoteData } = this._getState();
@@ -19722,39 +19987,39 @@ export class
         const { lfModifiedRowIndexes } = quoteData.uiMetadata;
         const items = this._getItems();
 
-        // 2A. Check if anything is selected
+        // 2A. Check if anything is selected (already checked by _handleSSetModeToggle)
         if (multiSelectSelectedIndexes.length === 0) {
-            this.eventAggregator.publish(EVENTS.SHOW_NOTIFICATION, { message: 'è«‹å??¨ç¬¬ä¸€è¡¨ä¸­?¸å??…ç›®?? });
-            this.stateService.dispatch(uiActions.setModalActive(false));
+            this.eventAggregator.publish(EVENTS.SHOW_NOTIFICATION, { message: 'Please select items from the main table first.' });
+            this._exitAllK2Modes();
             return;
         }
 
-        // 2B. Find all unique, non-LF types present in the selection
+        // 2B. Find all unique types present in the selection
+        // [MODIFIED] (v6294 SSet) REMOVED the lfModifiedRowIndexes.includes(index) filter
         const eligibleTypes = new Set();
         const typeData = {}; // Store first-found data for pre-filling
 
         multiSelectSelectedIndexes.forEach(index => {
             const item = items[index];
             if (item && item.width && item.height && item.fabricType) {
-                // Exclude rows that are marked as LF-modified
-                if (!lfModifiedRowIndexes.includes(index)) {
-                    eligibleTypes.add(item.fabricType);
-                    // Store the first found data for pre-filling
-                    if (!typeData[item.fabricType]) {
-                        typeData[item.fabricType] = {
-                            fabric: item.fabric || '',
-                            color: item.color || ''
-                        };
-                    }
+                // SSet can now apply to ANY item, including LF
+                eligibleTypes.add(item.fabricType);
+                // Store the first found data for pre-filling
+                if (!typeData[item.fabricType]) {
+                    typeData[item.fabricType] = {
+                        fabric: item.fabric || '',
+                        color: item.color || ''
+                    };
                 }
             }
         });
 
         const sortedTypes = Array.from(eligibleTypes).sort();
 
+        // [MODIFIED] (v6294 SSet) Updated error message
         if (sortedTypes.length === 0) {
-            this.eventAggregator.publish(EVENTS.SHOW_NOTIFICATION, { message: '?¨é¸?–ç??…ç›®?‡ç‚º LF ?…ç›®ï¼Œç„¡æ³•ä½¿??SSet?‚è??¹ç”¨ N&C (è¦†è?) ??LF-Del?? });
-            this.stateService.dispatch(uiActions.setModalActive(false));
+            this.eventAggregator.publish(EVENTS.SHOW_NOTIFICATION, { message: 'No items with a valid Fabric Type (B1-SN) were found in your selection.' });
+            this._exitAllK2Modes();
             return;
         }
 
@@ -19815,13 +20080,24 @@ export class
 
                                 // Apply updates only to the selected items
                                 this.stateService.dispatch(quoteActions.batchUpdatePropertiesForIndexes(multiSelectSelectedIndexes, typeMap));
-                                this.stateService.dispatch(uiActions.clearMultiSelectSelection()); // Clear selection
+
+                                // [NEW] (v6294 SSet) Check if any of the modified indexes were LF items
+                                const { lfModifiedRowIndexes } = this._getState().quoteData.uiMetadata;
+                                const lfIndexesToClear = multiSelectSelectedIndexes.filter(index =>
+                                    lfModifiedRowIndexes.includes(index)
+                                );
+
+                                if (lfIndexesToClear.length > 0) {
+                                    // Clear their LF status (remove pink background)
+                                    this.stateService.dispatch(quoteActions.removeLFModifiedRows(lfIndexesToClear));
+                                }
+
                                 this.eventAggregator.publish(EVENTS.SHOW_NOTIFICATION, { message: `SSet applied to items.` });
 
                             } catch (e) {
                                 console.error('Error applying SSet batch update:', e);
                             } finally {
-                                this.stateService.dispatch(uiActions.setModalActive(false)); // Unlock UI
+                                this._exitAllK2Modes(); // Clean up mode and selection
                             }
                             return true; // Close dialog
                         }
@@ -19830,36 +20106,77 @@ export class
                         type: 'button', text: 'Cancel', className: 'secondary', colspan: 1,
                         callback: () => {
                             // 5.B Post-processing (Cancel)
-                            this.stateService.dispatch(uiActions.setModalActive(false)); // Unlock UI
+                            // (å¯¦ä?æ­¥é? 6)
+                            this._exitAllK2Modes(); // Clean up mode and selection
                             return true; // Close dialog
                         }
                     }
                 ]
             ],
             onOpen: () => {
-                // 6. Setup Enter key navigation
+                // 6. (å¯¦ä?æ­¥é? 4) Setup Enter/Blur key navigation
+                const confirmButton = document.querySelector('.dialog-overlay .primary-confirm-button');
+
+                // [FIX] (v6294 Bug Fix) Change from (id) to (id, index)
                 inputIds.forEach((id, index) => {
                     const input = document.getElementById(id);
                     if (input) {
-                        input.addEventListener('keydown', (e) => {
-                            if (e.key === 'Enter') {
-                                e.preventDefault();
-                                const nextId = inputIds[index + 1];
-                                if (nextId) {
-                                    document.getElementById(nextId)?.focus();
-                                } else {
-                                    const confirmButton = document.querySelector('.dialog-overlay .primary-confirm-button');
-                                    confirmButton?.focus();
+                        const isFColorInput = (index % 2 !== 0);
+
+                        const focusNext = (isBlur = false) => {
+                            const nextId = inputIds[index + 1];
+                            const nextInput = nextId ? document.getElementById(nextId) : null;
+
+                            if (nextInput) {
+                                nextInput.focus();
+                                // (å¯¦ä?æ­¥é? 4) If next input is F-Color and this was a blur/enter/tab, select it.
+                                if (isBlur && (index + 1) % 2 !== 0) {
+                                    nextInput.select();
                                 }
+                                // (å¯¦ä?æ­¥é? 4) If next input is F-Name, select it.
+                                if (isBlur && (index + 1) % 2 === 0) {
+                                    nextInput.select();
+                                }
+                            } else {
+                                confirmButton?.focus();
                             }
+                        };
+
+                        input.addEventListener('keydown', (e) => {
+                            if (e.key === 'Enter' || e.key === 'Tab') {
+                                e.preventDefault();
+                                focusNext(true); // Pass true for select
+                            }
+                        });
+
+                        // (å¯¦ä?æ­¥é? 4) Also trigger on blur
+                        input.addEventListener('blur', (e) => {
+                            // Prevent blur cascade when moving from F-Name to F-Color
+                            const relatedTarget = e.relatedTarget || document.activeElement;
+                            const nextId = inputIds[index + 1];
+                            if (relatedTarget && relatedTarget.id === nextId) {
+                                return;
+                            }
+                            focusNext(true);
                         });
                     }
                 });
+
+                if (confirmButton) {
+                    confirmButton.addEventListener('keydown', (e) => {
+                        if (e.key === 'Enter') {
+                            e.preventDefault();
+                            confirmButton.click();
+                        }
+                    });
+                }
+
+                // Focus the very first input (F-Name)
                 if (inputIds.length > 0) {
                     setTimeout(() => {
                         const firstInput = document.getElementById(inputIds[0]);
                         firstInput?.focus();
-                        firstInput?.select();
+                        firstInput?.select(); // (å¯¦ä?æ­¥é? 4) Also select the first F-Name
                     }, 50);
                 }
             }
@@ -19869,7 +20186,7 @@ export class
 
     _exitAllK2Modes() {
         this.stateService.dispatch(uiActions.setActiveEditMode(null));
-        this.stateService.dispatch(uiActions.clearMultiSelectSelection());
+        this.stateService.dispatch(uiActions.clearMultiSelectSelection()); // (æ­¥é? 6 & 7)
         this.stateService.dispatch(uiActions.clearLFSelection());
         // [REMOVED] (Phase 3 Cleanup) this.stateService.dispatch(uiActions.clearSSetSelection());
 
