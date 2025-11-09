@@ -14,11 +14,16 @@ export class F2SummaryView {
         this.stateService = stateService;
         this.calculationService = calculationService;
 
-        // [MODIFIED] (Phase 12 & 13)
+        // [MODIFIED] (v6294) Updated to new 8-step focus order
         this.f2InputSequence = [
-            'f2-b14-install-qty', 'f2-b10-wifi-qty', 'f2-b13-delivery-qty',
-            'f2-b15-removal-qty', 'f2-b17-mul-times', 'f2-b18-discount',
-            'new-offer', 'f2-deposit' // 'f2-balance' is readonly, so no focus
+            'f2-b10-wifi-qty',
+            'f2-b13-delivery-qty',
+            'f2-b14-install-qty',
+            'f2-b15-removal-qty',
+            'f2-b17-mul-times',
+            'f2-b18-discount',
+            'new-offer',
+            'f2-deposit' // 'f2-balance' is readonly, so no focus
         ];
 
         this._cacheF2Elements();
@@ -89,13 +94,11 @@ export class F2SummaryView {
             }
         };
 
-        const f2Inputs = [
-            this.f2.b10_wifiQty, this.f2.b13_deliveryQty, this.f2.b14_installQty,
-            this.f2.b15_removalQty, this.f2.b17_mulTimes, this.f2.b18_discount,
-            this.f2.new_offer, // [NEW] Add listener for new-offer
-            this.f2.deposit // [NEW] v6290 Add listener for deposit
-        ];
-        f2Inputs.forEach(input => setupF2InputListener(input));
+        // [MODIFIED] (v6294) Use the new sequence array to apply listeners
+        this.f2InputSequence.forEach(inputId => {
+            const inputElement = this.f2[inputId.replace(/-/g, '_')] || document.getElementById(inputId);
+            setupF2InputListener(inputElement);
+        });
 
         const feeCells = [
 
@@ -151,7 +154,6 @@ export class F2SummaryView {
         const deliveryFee = f2State.deliveryFee || 0;
         const installFee = f2State.installFee || 0;
         const removalFee = f2State.removalFee || 0;
-
         const acceSum = winderPrice + dualPrice;
         const eAcceSum = motorPrice + remotePrice + chargerPrice + cordPrice + wifiSum;
         const surchargeFee =
@@ -218,7 +220,6 @@ export class F2SummaryView {
         const { updatedQuoteData } = this.calculationService.calculateAndSum(quoteData, productStrategy);
 
         this.stateService.dispatch(quoteActions.setQuoteData(updatedQuoteData));
-
         // [NEW] (Phase 12) Auto-populate install Qty if it's null
         if (ui.f2.installQty === null) {
             // We use updatedQuoteData.products... to get the most current item list
@@ -232,8 +233,8 @@ export class F2SummaryView {
 
         this._calculateF2Summary();
 
-        // [MODIFIED] (Phase 12) Change focus to install Qty
-        this.eventAggregator.publish(EVENTS.FOCUS_ELEMENT, { elementId: 'f2-b14-install-qty' });
+        // [MODIFIED] (v6294) Change focus to wifi Qty on all devices
+        this.eventAggregator.publish(EVENTS.FOCUS_ELEMENT, { elementId: 'f2-b10-wifi-qty' });
     }
 
     // --- [NEW] Methods migrated from WorkflowService ---

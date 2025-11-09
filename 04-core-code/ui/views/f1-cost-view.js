@@ -161,17 +161,17 @@ export class F1CostView {
     activate() {
         this.eventAggregator.publish(EVENTS.F1_TAB_ACTIVATED);
 
-        // [MODIFIED] (v6294) (方案 B)
-        // 僅在桌機版面 (寬度 > 600px) 自動聚焦，以避免在手機上遮擋鍵盤。
-        if (!window.matchMedia("(max-width: 600px)").matches) {
-            setTimeout(() => {
-                const discountInput = this.f1.inputs.discount;
-                if (discountInput) {
-                    discountInput.focus();
-                    discountInput.select();
-                }
-            }, 50); // A small delay ensures the element is visible and focusable.
-        }
+        // [MODIFIED] (v6294) (撤銷第 12 次編修)
+        // 恢復 F1 在所有裝置上的自動聚焦功能，使其與 F2 的行為一致。
+        // if (!window.matchMedia("(max-width: 600px)").matches) {
+        setTimeout(() => {
+            const discountInput = this.f1.inputs.discount;
+            if (discountInput) {
+                discountInput.focus();
+                discountInput.select();
+            }
+        }, 50); // A small delay ensures the element is visible and focusable.
+        // }
     }
 
     // --- [NEW] Methods migrated from WorkflowService ---
