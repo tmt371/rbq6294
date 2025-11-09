@@ -153,7 +153,6 @@ export class F1CostView {
 
         // [NEW] (F1/F2 Refactor Phase 2) Dispatch the calculated totals to the central state
         this.stateService.dispatch(uiActions.setF1CostTotals(subTotal, finalTotal));
-
         this.f1.displays.price['sub-total'].textContent = formatPrice(subTotal);
         this.f1.displays.price.gst.textContent = formatPrice(gst);
         this.f1.displays.price['final-total'].textContent = formatPrice(finalTotal);
@@ -162,14 +161,16 @@ export class F1CostView {
     activate() {
         this.eventAggregator.publish(EVENTS.F1_TAB_ACTIVATED);
 
-        // [NEW] Focus on the discount input when the tab is activated.
-        setTimeout(() => {
-            const discountInput = this.f1.inputs.discount;
-            if (discountInput) {
-                discountInput.focus();
-                discountInput.select();
-            }
-        }, 50); // A small delay ensures the element is visible and focusable.
+        // [REMOVED] (v6294) Remove automatic focus on mobile to prevent keyboard blocking.
+        // User must now tap the input manually, allowing the browser's native
+        // viewport-shifting behavior to work correctly (like in F2).
+        // setTimeout(() => {
+        //     const discountInput = this.f1.inputs.discount;
+        //     if (discountInput) {
+        //         discountInput.focus();
+        //         discountInput.select();
+        //     }
+        // }, 50); // A small delay ensures the element is visible and focusable.
     }
 
     // --- [NEW] Methods migrated from WorkflowService ---
@@ -297,7 +298,6 @@ export class F1CostView {
             onOpen: () => {
                 const inputCombo = document.getElementById(DOM_IDS.DIALOG_INPUT_COMBO);
                 const inputSlim = document.getElementById(DOM_IDS.DIALOG_INPUT_SLIM);
-
                 inputSlim.addEventListener('input', () => {
                     const qtySlim = parseInt(inputSlim.value, 10);
                     if (!isNaN(qtySlim) && qtySlim >= 0 && qtySlim <= totalDualPairs) {
