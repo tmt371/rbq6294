@@ -125,14 +125,14 @@ export class
 
         // 3.B. Conflict exists, show intermediate conflict dialog
         this.eventAggregator.publish(EVENTS.SHOW_CONFIRMATION_DIALOG, {
-            message: '此報價單包含 Light-Filter (LF) 項目。您希望如何處理？',
+            message: 'This quote contains Light-Filter (LF) items. How would you like to proceed?',
             closeOnOverlayClick: false,
             gridTemplateColumns: '1fr', // Single column for these buttons
             layout: [
                 [
                     {
                         type: 'button',
-                        text: '覆蓋 LF 項目 (更新所有項目)',
+                        text: 'Overwrite LF items (Update All)',
                         className: 'primary-confirm-button',
                         callback: () => {
                             // User chose to overwrite. Show N&C dialog targeting all items.
@@ -144,7 +144,7 @@ export class
                 [
                     {
                         type: 'button',
-                        text: '保留 LF 項目 (僅更新非 LF 項目)',
+                        text: 'Preserve LF items (Update Non-LF Only)',
                         callback: () => {
                             // User chose to preserve. Show N&C dialog targeting only non-LF items.
                             this._showNCDialog(false); // 'false' means do not overwrite LF
@@ -155,7 +155,7 @@ export class
                 [
                     {
                         type: 'button',
-                        text: '取消',
+                        text: 'Cancel',
                         className: 'secondary',
                         callback: () => {
                             // User cancelled. Just unlock the UI.
@@ -197,8 +197,8 @@ export class
         const sortedTypes = Array.from(eligibleTypes).sort();
         if (sortedTypes.length === 0) {
             const message = overwriteLF
-                ? '沒有項目可供覆蓋。'
-                : '沒有可供編輯的非 LF 項目。';
+                ? 'No items to overwrite.'
+                : 'No non-LF items available to edit.';
             this.eventAggregator.publish(EVENTS.SHOW_NOTIFICATION, { message: message });
             this.stateService.dispatch(uiActions.setModalActive(false)); // Unlock UI
             return;
@@ -319,7 +319,7 @@ export class
 
         // 2A. Check if anything is selected
         if (multiSelectSelectedIndexes.length === 0) {
-            this.eventAggregator.publish(EVENTS.SHOW_NOTIFICATION, { message: '請先在第一表中選取項目。' });
+            this.eventAggregator.publish(EVENTS.SHOW_NOTIFICATION, { message: 'Please select items from the main table first.' });
             this.stateService.dispatch(uiActions.setModalActive(false));
             return;
         }
@@ -336,8 +336,8 @@ export class
 
         if (eligibleIndexes.length === 0) {
             const msg = multiSelectSelectedIndexes.length > 0
-                ? '您選取的項目中不包含 B2, B3, 或 B4 類型，或它們已被設為 LF。'
-                : '沒有可供編輯的非 LF 項目。';
+                ? 'The selection contains no eligible B2, B3, or B4 items, or they are already set as LF.'
+                : 'No non-LF items available to edit.';
             this.eventAggregator.publish(EVENTS.SHOW_NOTIFICATION, { message: msg });
             this.stateService.dispatch(uiActions.setModalActive(false)); // Unlock UI
             return;
@@ -455,7 +455,7 @@ export class
 
         // 2A. Check if anything is selected
         if (multiSelectSelectedIndexes.length === 0) {
-            this.eventAggregator.publish(EVENTS.SHOW_NOTIFICATION, { message: '請先在第一表中選取項目。' });
+            this.eventAggregator.publish(EVENTS.SHOW_NOTIFICATION, { message: 'Please select items from the main table first.' });
             this.stateService.dispatch(uiActions.setModalActive(false));
             return;
         }
@@ -484,7 +484,7 @@ export class
         const sortedTypes = Array.from(eligibleTypes).sort();
 
         if (sortedTypes.length === 0) {
-            this.eventAggregator.publish(EVENTS.SHOW_NOTIFICATION, { message: '您選取的項目均為 LF 項目，無法使用 SSet。請改用 N&C (覆蓋) 或 LF-Del。' });
+            this.eventAggregator.publish(EVENTS.SHOW_NOTIFICATION, { message: 'All selected items are LF items. SSet cannot be used. Please use N&C (Overwrite) or LF-Del instead.' });
             this.stateService.dispatch(uiActions.setModalActive(false));
             return;
         }
