@@ -161,16 +161,17 @@ export class F1CostView {
     activate() {
         this.eventAggregator.publish(EVENTS.F1_TAB_ACTIVATED);
 
-        // [REMOVED] (v6294) Remove automatic focus on mobile to prevent keyboard blocking.
-        // User must now tap the input manually, allowing the browser's native
-        // viewport-shifting behavior to work correctly (like in F2).
-        // setTimeout(() => {
-        //     const discountInput = this.f1.inputs.discount;
-        //     if (discountInput) {
-        //         discountInput.focus();
-        //         discountInput.select();
-        //     }
-        // }, 50); // A small delay ensures the element is visible and focusable.
+        // [MODIFIED] (v6294) (方案 B)
+        // 僅在桌機版面 (寬度 > 600px) 自動聚焦，以避免在手機上遮擋鍵盤。
+        if (!window.matchMedia("(max-width: 600px)").matches) {
+            setTimeout(() => {
+                const discountInput = this.f1.inputs.discount;
+                if (discountInput) {
+                    discountInput.focus();
+                    discountInput.select();
+                }
+            }, 50); // A small delay ensures the element is visible and focusable.
+        }
     }
 
     // --- [NEW] Methods migrated from WorkflowService ---
@@ -180,7 +181,7 @@ export class F1CostView {
         const totalRemoteCount = ui.driveRemoteCount || 0;
 
         const initial1ch = ui.f1.remote_1ch_qty;
-        const initial16ch = (ui.f1.remote_16ch_qty === null) ? totalRemoteCount - initial1ch : ui.f1.remote_16ch_qty;
+        const initial16ch = (ui.f1.remote_1ch_qty === null) ? totalRemoteCount - initial1ch : ui.f1.remote_16ch_qty;
 
         this.eventAggregator.publish(EVENTS.SHOW_CONFIRMATION_DIALOG, {
             message: `Total remotes: ${totalRemoteCount}. Please distribute them.`,
