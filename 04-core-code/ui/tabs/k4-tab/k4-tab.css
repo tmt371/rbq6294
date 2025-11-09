@@ -1,5 +1,11 @@
 /* File: 04-core-code/ui/tabs/k4-tab/k4-tab.css */
 
+/* [NEW] (v6294) Fix layout bug by forcing all inputs to respect the grid */
+#k4-content .panel-input {
+    width: 100%;
+    box-sizing: border-box;
+}
+
 /* --- K4 Styles (Moved from left-panel.css) --- */
 /* Note: These styles are now CORRECTED to use k4- class names */
 #k4-content .feature-buttons {
