@@ -564,31 +564,31 @@ export class
             return;
         }
 
-        // 2B. Find all unique, non-LF types present in the selection
+        // 2B. Find all unique types present in the selection
+        // [MODIFIED] (v6294 SSet) REMOVED the lfModifiedRowIndexes.includes(index) filter
         const eligibleTypes = new Set();
         const typeData = {}; // Store first-found data for pre-filling
 
         multiSelectSelectedIndexes.forEach(index => {
             const item = items[index];
             if (item && item.width && item.height && item.fabricType) {
-                // Exclude rows that are marked as LF-modified
-                if (!lfModifiedRowIndexes.includes(index)) {
-                    eligibleTypes.add(item.fabricType);
-                    // Store the first found data for pre-filling
-                    if (!typeData[item.fabricType]) {
-                        typeData[item.fabricType] = {
-                            fabric: item.fabric || '',
-                            color: item.color || ''
-                        };
-                    }
+                // SSet can now apply to ANY item, including LF
+                eligibleTypes.add(item.fabricType);
+                // Store the first found data for pre-filling
+                if (!typeData[item.fabricType]) {
+                    typeData[item.fabricType] = {
+                        fabric: item.fabric || '',
+                        color: item.color || ''
+                    };
                 }
             }
         });
 
         const sortedTypes = Array.from(eligibleTypes).sort();
 
+        // [MODIFIED] (v6294 SSet) Updated error message
         if (sortedTypes.length === 0) {
-            this.eventAggregator.publish(EVENTS.SHOW_NOTIFICATION, { message: 'All selected items are LF items. SSet cannot be used. Please use N&C (Overwrite) or LF-Del instead.' });
+            this.eventAggregator.publish(EVENTS.SHOW_NOTIFICATION, { message: 'No items with a valid Fabric Type (B1-SN) were found in your selection.' });
             this._exitAllK2Modes();
             return;
         }
@@ -650,6 +650,18 @@ export class
 
                                 // Apply updates only to the selected items
                                 this.stateService.dispatch(quoteActions.batchUpdatePropertiesForIndexes(multiSelectSelectedIndexes, typeMap));
+
+                                // [NEW] (v6294 SSet) Check if any of the modified indexes were LF items
+                                const { lfModifiedRowIndexes } = this._getState().quoteData.uiMetadata;
+                                const lfIndexesToClear = multiSelectSelectedIndexes.filter(index =>
+                                    lfModifiedRowIndexes.includes(index)
+                                );
+
+                                if (lfIndexesToClear.length > 0) {
+                                    // Clear their LF status (remove pink background)
+                                    this.stateService.dispatch(quoteActions.removeLFModifiedRows(lfIndexesToClear));
+                                }
+
                                 this.eventAggregator.publish(EVENTS.SHOW_NOTIFICATION, { message: `SSet applied to items.` });
 
                             } catch (e) {
@@ -682,12 +694,13 @@ export class
 
                         const focusNext = (isBlur = false) => {
                             const nextId = inputIds[index + 1];
-                            if (nextId) {
-                                const nextInput = document.getElementById(nextId);
-                                nextInput?.focus();
+                            const nextInput = nextId ? document.getElementById(nextId) : null;
+
+                            if (nextInput) {
+                                nextInput.focus();
                                 // (實作步驟 4) If next input is F-Color and this was a blur/enter/tab, select it.
                                 if (isBlur && (index + 1) % 2 !== 0) {
-                                    nextInput?.select();
+                                    nextInput.select();
                                 }
                             } else {
                                 confirmButton?.focus();
@@ -702,12 +715,15 @@ export class
                         });
 
                         // (實作步驟 4) Also trigger on blur
-                        input.addEventListener('blur', () => focusNext(true));
-
-                        // (實作步驟 4) Pre-select F-Color input if it's the first one
-                        if (isFColorInput && index === 1) {
-                            setTimeout(() => input.select(), 50);
-                        }
+                        input.addEventListener('blur', (e) => {
+                            // Prevent blur cascade when moving from F-Name to F-Color
+                            const relatedTarget = e.relatedTarget || document.activeElement;
+                            const nextId = inputIds[index + 1];
+                            if (relatedTarget && relatedTarget.id === nextId) {
+                                return;
+                            }
+                            focusNext(true);
+                        });
                     }
                 });
 
@@ -720,15 +736,8 @@ export class
                     });
                 }
 
-                if (inputIds.length > 0 && inputIds.length < 2) {
-                    // Only one input (F-Name), pre-select it
-                    setTimeout(() => {
-                        const firstInput = document.getElementById(inputIds[0]);
-                        firstInput?.focus();
-                        firstInput?.select();
-                    }, 50);
-                } else if (inputIds.length >= 2) {
-                    // (實作步驟 4) Focus F-Name first, F-Color will be selected on blur/enter
+                // Focus the very first input (F-Name)
+                if (inputIds.length > 0) {
                     setTimeout(() => {
                         const firstInput = document.getElementById(inputIds[0]);
                         firstInput?.focus();
