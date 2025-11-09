@@ -51,8 +51,7 @@ class App {
                 link.href = url;
                 document.head.appendChild(link);
             } catch (error) {
-                console.error(`Failed to load CSS 
-from ${url}:`, error);
+                console.error(`Failed to load CSS from ${url}:`, error);
             }
         };
 
@@ -120,10 +119,12 @@ from ${url}:`, error);
         const rightPanelComponent = this.appContext.get('rightPanelComponent');
         const leftPanelTabManager = this.appContext.get('leftPanelTabManager'); // [NEW] Get LeftPanelTabManager
         const k1TabComponent = this.appContext.get('k1TabComponent'); // [NEW] Get K1 component
+        const k2TabComponent = this.appContext.get('k2TabComponent'); // [NEW] (v6294) Get K2 component
         const k3TabComponent =
             this.appContext.get('k3TabComponent'); // [NEW] Get K3 component
         const k4TabComponent = this.appContext.get('k4TabComponent'); // [NEW] Get K4 component
         const k5TabComponent = this.appContext.get('k5TabComponent'); // [NEW] Get K5 component
+
 
         // [REMOVED]
 
@@ -136,6 +137,7 @@ from ${url}:`, error);
             rightPanelComponent,
             leftPanelTabManager, // [NEW] Inject LeftPanelTabManager
             k1TabComponent, // [NEW] Inject K1 component
+            k2TabComponent, // [NEW] (v6294) Inject K2 component
             k3TabComponent, // [NEW] Inject K3 component
             k4TabComponent, // [NEW] Inject K4 component
 
