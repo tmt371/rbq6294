@@ -87,10 +87,8 @@ export class DetailConfigView {
         const { ui } = this.stateService.getState();
         const { activeEditMode } = ui;
 
-        // [MODIFIED] (Phase 3 Cleanup)
-        // Only check for the remaining OLD K2 modes (LF-Del)
-        // [MODIFIED] (v6294) Check for both LF and LFD modes
-        if (activeEditMode === 'K2_LF_DELETE_SELECT' || activeEditMode === 'K2_LF_MODE') {
+        // [MODIFIED] (v6294 SSet) Check for all K2 modes (LF, LFD, SSet)
+        if (activeEditMode === 'K2_LF_DELETE_SELECT' || activeEditMode === 'K2_LF_MODE' || activeEditMode === 'K2_SSET_MODE') {
             this.k2View.handleSequenceCellClick({ rowIndex });
         } else {
             // [NEW] DEFAULT BEHAVIOR (for new LF/SSet flows):
@@ -104,11 +102,6 @@ export class DetailConfigView {
     handleModeToggle({ mode }) {
         this.k2View.handleModeToggle({ mode });
     }
-
-    // [REMOVED] (Phase 3 Cleanup)
-    // handleLFEditRequest() {
-    //     this.k2View.handleLFEditRequest();
-    // }
 
     // [REMOVED] (v6294) This is now handled by handleModeToggle
     // handleLFDeleteRequest() {

@@ -23,9 +23,10 @@ export class K2TabComponent {
         // Define our specific K2 modes
         const isLFMode = activeEditMode === 'K2_LF_MODE';
         const isLFDMode = activeEditMode === 'K2_LF_DELETE_SELECT';
+        const isSSetMode = activeEditMode === 'K2_SSET_MODE'; // [NEW] (v6294 SSet)
 
         // Is *any* K2 mode active?
-        const isK2ModeActive = isLFMode || isLFDMode;
+        const isK2ModeActive = isLFMode || isLFDMode || isSSetMode; // [MODIFIED] (v6294 SSet)
 
         // Is *another* panel mode active (like K1, K3, K4, K5)?
         const isOtherPanelModeActive = activeEditMode !== null && !isK2ModeActive;
@@ -38,8 +39,11 @@ export class K2TabComponent {
         this.lfdButton.classList.toggle('active', isLFDMode);
         this.lfdButton.disabled = (isK2ModeActive && !isLFDMode) || isOtherPanelModeActive;
 
-        // Handle N&C and SSet Buttons (They have no active state, only disabled)
+        // Handle SSet Button (New Active State) [NEW] (v6294 SSet)
+        this.ssetButton.classList.toggle('active', isSSetMode);
+        this.ssetButton.disabled = (isK2ModeActive && !isSSetMode) || isOtherPanelModeActive;
+
+        // Handle N&C Button (Disabled only)
         this.ncButton.disabled = isK2ModeActive || isOtherPanelModeActive;
-        this.ssetButton.disabled = isK2ModeActive || isOtherPanelModeActive;
     }
 }

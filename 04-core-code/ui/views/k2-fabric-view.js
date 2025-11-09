@@ -24,7 +24,7 @@ export class
         // [NEW] (Phase 2) Listen for the new LF dialog event
         this.eventAggregator.subscribe(EVENTS.USER_REQUESTED_LF_DIALOG, () => this._showLFDialog()); // [MODIFIED] (v6294) Renamed for clarity
         // [NEW] (Phase 3) Listen for the new SSet dialog event
-        this.eventAggregator.subscribe(EVENTS.USER_REQUESTED_SSET_DIALOG, () => this.handleSSetDialogRequest());
+        this.eventAggregator.subscribe(EVENTS.USER_REQUESTED_SSET_DIALOG, () => this._showSSetDialog()); // [MODIFIED] (v6294 SSet) Renamed
 
         console.log("K2FabricView Initialized.");
     }
@@ -66,7 +66,7 @@ export class
         const item = this._getItems()[rowIndex];
         if (!item || (item.width === null && item.height === null)) return; // Ignore empty rows
 
-        // [MODIFIED] (v6294) This handler now manages selection for both LF and LFD modes.
+        // [MODIFIED] (v6294 SSet) This handler now manages selection for LF, LFD, and SSet modes.
         if (activeEditMode === 'K2_LF_DELETE_SELECT') {
             // --- LFD Mode (Select items to delete) ---
             const { lfModifiedRowIndexes } = this._getState().quoteData.uiMetadata;
@@ -77,8 +77,8 @@ export class
             // Use the dedicated LF selection state for LFD mode
             this.stateService.dispatch(uiActions.toggleLFSelection(rowIndex));
 
-        } else if (activeEditMode === 'K2_LF_MODE') {
-            // --- LF Mode (Select items to apply to) ---
+        } else if (activeEditMode === 'K2_LF_MODE' || activeEditMode === 'K2_SSET_MODE') {
+            // --- LF Mode & SSet Mode (Select items to apply to) ---
             // (實作步驟 3) Use the main multi-select state
             this.stateService.dispatch(uiActions.toggleMultiSelectSelection(rowIndex));
         }
@@ -86,12 +86,14 @@ export class
         // [REMOVED] (Phase 3 Cleanup) K2_SSET_SELECT logic removed
     }
 
-    // [NEW] (v6294) Entry point for mode-switching buttons (LF and LFD)
+    // [NEW] (v6294) Entry point for mode-switching buttons (LF, LFD, SSet)
     handleModeToggle({ mode }) {
         if (mode === 'LF') {
             this._handleLFModeToggle();
         } else if (mode === 'LFD') {
             this._handleLFDModeToggle();
+        } else if (mode === 'SSet') {
+            this._handleSSetModeToggle();
         }
     }
 
@@ -156,6 +158,34 @@ export class
         }
     }
 
+    // [NEW] (v6294 SSet) Implements "click-select-click" for SSet button
+    _handleSSetModeToggle() {
+        const { activeEditMode } = this._getState().ui;
+
+        if (activeEditMode === 'K2_SSET_MODE') {
+            // --- This is the SECOND click (Execute) ---
+            const { multiSelectSelectedIndexes } = this._getState().ui;
+
+            // (實作步驟 5)
+            if (multiSelectSelectedIndexes.length === 0) {
+                this.eventAggregator.publish(EVENTS.SHOW_NOTIFICATION, { message: 'SSet mode cancelled. No items selected.' });
+                this._exitAllK2Modes(); // Cancel the mode
+                return;
+            }
+
+            // (實作步驟 4)
+            this._showSSetDialog(); // Show the dialog
+
+        } else {
+            // --- This is the FIRST click (Enter Mode) ---
+            // (實作步驟 1)
+            this._exitAllK2Modes(); // Ensure no other mode is active
+            this.stateService.dispatch(uiActions.setActiveEditMode('K2_SSET_MODE'));
+            // (實作步驟 2)
+            this.eventAggregator.publish(EVENTS.SHOW_NOTIFICATION, { message: 'Please select items from the main table.' });
+        }
+    }
+
 
     // [REMOVED] (Phase 3 Cleanup)
     // handleLFEditRequest() { ... }
@@ -163,7 +193,7 @@ export class
     // [REMOVED] (v6294) This is now handled by _handleLFDModeToggle
     // handleLFDeleteRequest() { ... }
 
-    // [REMOVED] (Phase 3 Cleanup) Old Handler for the SSet button
+    // [REMOVED] (v6294 SSet) Old SSet handler removed, logic moved to _showSSetDialog
     // handleSSetRequest() { ... }
 
     // [MODIFIED] (Stage 2.B) Refactored to handle LF conflict
@@ -475,9 +505,10 @@ export class
                 const fColorInput = document.getElementById(fColorId);
                 const confirmButton = document.querySelector('.dialog-overlay .primary-confirm-button');
 
-                const focusNext = (currentId) => {
+                const focusNext = (currentId, isBlur = false) => {
                     if (currentId === fNameId) {
                         fColorInput?.focus();
+                        if (isBlur) fColorInput?.select(); // (v6294 SSet) Only select on blur/tab/enter
                     } else if (currentId === fColorId) {
                         confirmButton?.focus();
                     }
@@ -489,10 +520,10 @@ export class
                         input.addEventListener('keydown', (e) => {
                             if (e.key === 'Enter' || e.key === 'Tab') {
                                 e.preventDefault();
-                                focusNext(id);
+                                focusNext(id, true); // (v6294 SSet) Pass true for select
                             }
                         });
-                        input.addEventListener('blur', () => focusNext(id));
+                        input.addEventListener('blur', () => focusNext(id, true));
                     }
                 });
 
@@ -515,10 +546,10 @@ export class
         });
     }
 
-    // [NEW] (Phase 3) Handler for the SSet Dialog request
-    handleSSetDialogRequest() {
-        // 1. Lock the UI
-        this.stateService.dispatch(uiActions.setModalActive(true));
+    // [REFACTORED] (v6294 SSet) Renamed from handleSSetDialogRequest to _showSSetDialog
+    _showSSetDialog() {
+        // 1. Lock the UI (already locked by _handleSSetModeToggle)
+        // this.stateService.dispatch(uiActions.setModalActive(true));
 
         // 2. Pre-processing: Check for eligible types IN THE SELECTION
         const { ui, quoteData } = this._getState();
@@ -526,10 +557,10 @@ export class
         const { lfModifiedRowIndexes } = quoteData.uiMetadata;
         const items = this._getItems();
 
-        // 2A. Check if anything is selected
+        // 2A. Check if anything is selected (already checked by _handleSSetModeToggle)
         if (multiSelectSelectedIndexes.length === 0) {
             this.eventAggregator.publish(EVENTS.SHOW_NOTIFICATION, { message: 'Please select items from the main table first.' });
-            this.stateService.dispatch(uiActions.setModalActive(false));
+            this._exitAllK2Modes();
             return;
         }
 
@@ -558,7 +589,7 @@ export class
 
         if (sortedTypes.length === 0) {
             this.eventAggregator.publish(EVENTS.SHOW_NOTIFICATION, { message: 'All selected items are LF items. SSet cannot be used. Please use N&C (Overwrite) or LF-Del instead.' });
-            this.stateService.dispatch(uiActions.setModalActive(false));
+            this._exitAllK2Modes();
             return;
         }
 
@@ -619,13 +650,12 @@ export class
 
                                 // Apply updates only to the selected items
                                 this.stateService.dispatch(quoteActions.batchUpdatePropertiesForIndexes(multiSelectSelectedIndexes, typeMap));
-                                this.stateService.dispatch(uiActions.clearMultiSelectSelection()); // Clear selection
                                 this.eventAggregator.publish(EVENTS.SHOW_NOTIFICATION, { message: `SSet applied to items.` });
 
                             } catch (e) {
                                 console.error('Error applying SSet batch update:', e);
                             } finally {
-                                this.stateService.dispatch(uiActions.setModalActive(false)); // Unlock UI
+                                this._exitAllK2Modes(); // Clean up mode and selection
                             }
                             return true; // Close dialog
                         }
@@ -634,32 +664,71 @@ export class
                         type: 'button', text: 'Cancel', className: 'secondary', colspan: 1,
                         callback: () => {
                             // 5.B Post-processing (Cancel)
-                            this.stateService.dispatch(uiActions.setModalActive(false)); // Unlock UI
+                            // (實作步驟 6)
+                            this._exitAllK2Modes(); // Clean up mode and selection
                             return true; // Close dialog
                         }
                     }
                 ]
             ],
             onOpen: () => {
-                // 6. Setup Enter key navigation
+                // 6. (實作步驟 4) Setup Enter/Blur key navigation
+                const confirmButton = document.querySelector('.dialog-overlay .primary-confirm-button');
+
                 inputIds.forEach((id, index) => {
                     const input = document.getElementById(id);
                     if (input) {
-                        input.addEventListener('keydown', (e) => {
-                            if (e.key === 'Enter') {
-                                e.preventDefault();
-                                const nextId = inputIds[index + 1];
-                                if (nextId) {
-                                    document.getElementById(nextId)?.focus();
-                                } else {
-                                    const confirmButton = document.querySelector('.dialog-overlay .primary-confirm-button');
-                                    confirmButton?.focus();
+                        const isFColorInput = (index % 2 !== 0);
+
+                        const focusNext = (isBlur = false) => {
+                            const nextId = inputIds[index + 1];
+                            if (nextId) {
+                                const nextInput = document.getElementById(nextId);
+                                nextInput?.focus();
+                                // (實作步驟 4) If next input is F-Color and this was a blur/enter/tab, select it.
+                                if (isBlur && (index + 1) % 2 !== 0) {
+                                    nextInput?.select();
                                 }
+                            } else {
+                                confirmButton?.focus();
+                            }
+                        };
+
+                        input.addEventListener('keydown', (e) => {
+                            if (e.key === 'Enter' || e.key === 'Tab') {
+                                e.preventDefault();
+                                focusNext(true); // Pass true for select
                             }
                         });
+
+                        // (實作步驟 4) Also trigger on blur
+                        input.addEventListener('blur', () => focusNext(true));
+
+                        // (實作步驟 4) Pre-select F-Color input if it's the first one
+                        if (isFColorInput && index === 1) {
+                            setTimeout(() => input.select(), 50);
+                        }
                     }
                 });
-                if (inputIds.length > 0) {
+
+                if (confirmButton) {
+                    confirmButton.addEventListener('keydown', (e) => {
+                        if (e.key === 'Enter') {
+                            e.preventDefault();
+                            confirmButton.click();
+                        }
+                    });
+                }
+
+                if (inputIds.length > 0 && inputIds.length < 2) {
+                    // Only one input (F-Name), pre-select it
+                    setTimeout(() => {
+                        const firstInput = document.getElementById(inputIds[0]);
+                        firstInput?.focus();
+                        firstInput?.select();
+                    }, 50);
+                } else if (inputIds.length >= 2) {
+                    // (實作步驟 4) Focus F-Name first, F-Color will be selected on blur/enter
                     setTimeout(() => {
                         const firstInput = document.getElementById(inputIds[0]);
                         firstInput?.focus();

@@ -40,8 +40,8 @@ export class K2TabInputHandler {
         const sSetButton = document.getElementById('btn-k2-sset');
         if (sSetButton) {
             sSetButton.addEventListener('click', () => {
-                // [MODIFIED] Changed event to trigger new dialog flow
-                this.eventAggregator.publish(EVENTS.USER_REQUESTED_SSET_DIALOG);
+                // [MODIFIED] (v6294 SSet) Changed event to trigger mode toggle
+                this.eventAggregator.publish(EVENTS.USER_TOGGLED_K2_MODE, { mode: 'SSet' });
             });
         }
 
