@@ -1,5 +1,11 @@
 /* File: 04-core-code/ui/tabs/k5-tab/k5-tab.css */
 
+/* [NEW] (v6294) Fix layout bug by forcing all inputs to respect the grid */
+#k5-content .panel-input {
+    width: 100%;
+    box-sizing: border-box;
+}
+
 /* --- K5 Styles (Moved from left-panel.css) --- */
 /* [MODIFIED] Corrected all 'k4-' to 'k5-' */
 #k5-input-display {
@@ -39,8 +45,7 @@
     background-color: #cffde1;
 }
 
-/* --- K5 Panel (formerly K4) Styles (Moved from 
-left-panel.css) --- */
+/* --- K5 Panel (formerly K4) Styles (Moved from left-panel.css) --- */
 .k5-grid-layout {
     display: flex;
     flex-direction: column;
