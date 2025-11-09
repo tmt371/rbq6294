@@ -1,0 +1,11 @@
+/* File: 04-core-code/ui/tabs/k1-tab/k1-tab.css */
+
+/* K1 (Location) specific styles moved from left-panel.css */
+#location-input-box {
+    width: 120px;
+    background-color: #e9ecef;
+}
+
+#location-input-box.active {
+    background-color: #fffacd;
+}

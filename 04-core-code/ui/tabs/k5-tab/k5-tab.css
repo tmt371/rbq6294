@@ -1,0 +1,104 @@
+/* File: 04-core-code/ui/tabs/k5-tab/k5-tab.css */
+
+/* --- K5 Styles (Moved from left-panel.css) --- */
+/* [MODIFIED] Corrected all 'k4-' to 'k5-' */
+#k5-input-display {
+    width: 150px;
+    text-align: right;
+    background-color: #e9ecef;
+}
+
+#k5-input-display.active {
+    background-color: #fffacd;
+}
+
+.k5-price-box {
+    border: 1px solid black;
+    padding: 5px 8px;
+    border-radius: 4px;
+    background-color: #fff;
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    justify-content: flex-end;
+}
+
+.k5-price-box .price-label {
+    font-size: 0.8em;
+    font-weight: bold;
+    color: #4b5563;
+}
+
+.k5-price-box .price-value {
+    font-size: 1.1em;
+    font-weight: bold;
+    color: var(--primary-color);
+}
+
+.results-table td.dual-cell-active {
+    background-color: #cffde1;
+}
+
+/* --- K5 Panel (formerly K4) Styles (Moved from 
+left-panel.css) --- */
+.k5-grid-layout {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    font-size: 0.8em;
+}
+
+.k5-grid-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+}
+
+.k5-grid-group {
+    border: 1px solid #333;
+    border-radius: 4px;
+    padding: 8px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.k5-grid-group>div {
+    flex: 1;
+    min-width: 0;
+}
+
+.k5-grid-cell-label {
+    font-weight: bold;
+    text-align: center;
+    font-size: 1em;
+}
+
+.k5-summary-display-box {
+    text-align: right;
+    font-weight: bold;
+    color: var(--primary-color);
+    background-color: #e9ecef;
+}
+
+.k5-grid-group .feature-button {
+    width: 100%;
+    flex-grow: 0;
+}
+
+/* [MODIFIED] Corrected 'k4-' to 'k5-' */
+.k5-grid-group .k5-price-box,
+.k5-grid-group #k5-input-display {
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.k5-grid-group-total {
+    border: 1px solid #c0392b;
+}
+
+.k5-summary-total-box {
+    font-size: 1.1em;
+    color: #c0392b;
+    background-color: #fff;
+}

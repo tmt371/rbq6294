@@ -1,0 +1,902 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>{{documentTitle}}</title>
+    <style>
+        /* --- 全局變數 --- */
+        :root {
+            --primary-color: #1a237e;
+            /* 深藍 */
+            --border-color: #e0e0e0;
+            /* 淺灰 */
+            --text-color: #333;
+            --success-color: #2e7d32;
+            /* 綠色，用於節省 */
+            --icon-color: #888888;
+
+        }
+
+        body {
+            font-family: 'Helvetica Neue', Arial, 'Heiti TC', 'Microsoft JhengHei', sans-serif;
+            background-color: #f0f2f5;
+            margin: 0;
+            padding: 20px;
+            color: var(--text-color);
+        }
+
+
+        .quotation-container {
+            max-width: 900px;
+            margin: auto;
+            background-color: #ffffff;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            padding: 20px;
+        }
+
+        .quotation-inner-wrapper {
+
+            border: 2px solid #a0d3e8;
+            padding: 40px;
+            border-radius: 8px;
+        }
+
+        /* --- 頁首 Header --- */
+        .header {
+            display: flex;
+            justify-content: space-between;
+
+            align-items: flex-start;
+            padding-bottom: 20px;
+            border-bottom: 3px solid var(--primary-color);
+            margin-bottom: 30px;
+        }
+
+        /* 公司資訊 */
+        .company-details {
+            text-align: right;
+        }
+
+        .company-details h1 {
+
+            margin: 0;
+            color: var(--primary-color);
+            font-size: 28px;
+        }
+
+        .company-details p {
+            margin: 5px 0 0;
+            font-size: 14px;
+            color: #555;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+        }
+
+        /* 報價單資訊 */
+        .quotation-meta {
+            text-align: left;
+        }
+
+        .quotation-meta h2 {
+
+            margin: 0 0 20px 0;
+            font-size: 24px;
+            color: #B22222;
+            /* Brick Red 磚紅色 */
+        }
+
+        .quotation-meta p {
+            margin: 4px 0 0;
+            font-size: 14px;
+        }
+
+        .icon {
+            color: var(--icon-color);
+            margin-right: 8px;
+            font-size: 16px;
+            width: 20px;
+            text-align: center;
+            order: -1;
+            margin-left: 0;
+            margin-right: 8px;
+        }
+
+
+        .company-details .icon {
+            order: 1;
+            margin-right: 0;
+            margin-left: 8px;
+        }
+
+        .company-details .abn-line {
+            padding-right: 28px;
+        }
+
+        /* --- 客戶資訊 --- */
+        .customer-info {
+            margin-bottom: 40px;
+        }
+
+
+        .customer-info p {
+            margin: 4px 0;
+            line-height: 1.6;
+        }
+
+        /* --- 報價表格 --- */
+        .items-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 30px;
+            border: 1px solid #333;
+            /* [MODIFIED] Add base border for compatibility */
+
+        }
+
+
+        .items-table thead {
+            background-color: var(--primary-color);
+            color: #ffffff;
+        }
+
+        .items-table th,
+        .items-table td {
+            padding: 12px 15px;
+            text-align: left;
+            font-weight: 600;
+            border: 1px solid #333;
+            /* [MODIFIED] Ensure all cells have borders */
+        }
+
+        .items-table tbody tr {
+
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .items-table td {
+            vertical-align: top;
+            font-weight: normal;
+            /* [MODIFIED] Reset font-weight for td */
+        }
+
+        .items-table .description {
+            font-weight: 500;
+        }
+
+        .items-table .details {
+
+            font-size: 13px;
+            color: #666;
+        }
+
+        .items-table .align-right {
+            text-align: right;
+        }
+
+        .items-table .original-price {
+            /* [FIX v6291] (步驟 1-5) 移除此處的 text-decoration: line-through; */
+            /* color: #999; (REMOVED) - 顏色由 JS 控制 */
+            font-size: 14px;
+        }
+
+        .items-table .discounted-price {
+            font-weight: bold;
+            /* [FIX v6291] 步驟 4: 再次加入紅色 (作為預設) */
+            color: #d32f2f;
+        }
+
+        .items-table .is-excluded {
+
+            text-decoration: line-through;
+            color: #999;
+        }
+
+        .table-scroll-wrapper {
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        /* --- 總結 --- */
+        /* [FIX v6291] 步驟 6: 針對 wrapper 的修正 (使用 flexbox) */
+        .summary-payment-wrapper {
+            width: 100%;
+            display: flex;
+            gap: 20px;
+            margin-top: 30px;
+            /* [NEW v6291] 步驟 10.A: 加入外框 */
+            border: 1px solid #cccccc;
+            border-radius: 4px;
+            /* [NEW v6291] 步驟 10.B: 加大間距 */
+            padding: 10px;
+            box-sizing: border-box;
+            /* 確保 padding 不會增加總寬度 */
+        }
+
+        /* [FIX v6291] 步驟 6: 子項目 (付款/總結) 各佔一半寬度 */
+        .summary-payment-wrapper>div {
+            flex: 1;
+            min-width: 0;
+            /* 允許項目縮小 */
+        }
+
+        .summary-section {
+            display: flex;
+            justify-content: flex-end;
+            /* [MODIFIED v6291] 步驟 9: 紅框改粉紅框 */
+            border: 2px solid #FFC0CB;
+            border-radius: 4px;
+            padding: 6px 20px 20px 20px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .summary-details {
+            width: 100%;
+            /* max-width: 400px; [REMOVED v6291] 步驟 6: 讓 flex 決定寬度 */
+        }
+
+        .summary-details table {
+            width: 100%;
+            /* [MODIFIED v6290 Task 3] */
+            border-collapse: collapse;
+        }
+
+        .summary-details td {
+            padding: 8px 0;
+            /* [MODIFIED v6290 Task 3] All internal lines thin black */
+            border-top: 1px solid #333;
+        }
+
+        /* [NEW v6290 Task 3] Remove border from first row */
+        .summary-details tr:first-child td {
+            border-top: none;
+        }
+
+        .summary-details .summary-label {
+            text-align: right;
+            padding-right: 20px;
+            color: #555;
+        }
+
+        .summary-details .summary-value {
+            text-align: right;
+            font-weight: 500;
+            padding-right: 10px;
+        }
+
+        .summary-details .grand-total td {
+            font-size: 18px;
+            font-weight: bold;
+            color: var(--primary-color);
+            /* [MODIFIED v6290 Task 3] Removed blue border-top override */
+            /* border-top: 2px solid var(--primary-color); */
+            padding-top: 10px;
+        }
+
+
+        .summary-details .savings-value {
+            color: var(--success-color);
+            font-weight: bold;
+        }
+
+
+        /* [REMOVED v6291] 步驟 6: 移除 .layout-cell 相關樣式，改用 .summary-payment-wrapper > div */
+
+
+        .payment-info {
+            width: 100%;
+            margin-top: 0;
+            box-sizing: border-box;
+            /* [MODIFIED v6291] 步驟 9: 深藍框改淺藍框 */
+            border: 2px solid #ADD8E6;
+            border-radius: 4px;
+            padding: 20px;
+        }
+
+        .payment-info h4 {
+            margin-top: 0;
+            color: var(--primary-color);
+        }
+
+        .payment-info p {
+            margin: 4px 0;
+            font-size: 14px;
+        }
+
+
+        .payment-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 1em;
+            margin-top: 0;
+            /* [MODIFIED] Removed margin-top */
+            border: none;
+            /* [MODIFIED] Removed table border */
+        }
+
+        /* [FIX v6291] 步驟 6: 恢復 .payment-table 的原始樣式 */
+        .payment-table td {
+            padding: 6px 0;
+            border-bottom: 1px solid lightblue;
+        }
+
+        .payment-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .payment-table .payid-row td {
+            border-bottom: none;
+            /* PayID row has no bottom border */
+        }
+
+        .payment-table .payid-row {
+            background-color: #f5f5f5;
+        }
+
+        .payment-table td:first-child {
+            font-weight: bold;
+            width: 80px;
+            text-align: right;
+            padding-right: 2px;
+        }
+
+        .payment-table td:nth-child(2) {
+            text-align: left;
+            padding-left: 4px;
+            border-left: 1px solid var(--border-color);
+        }
+
+        /* [END FIX v6291] 步驟 6 */
+
+
+        .payment-info strong {
+
+            display: inline-block;
+            width: 80px;
+        }
+
+        /* [NEW v6290 Task 2] New styles for payment block */
+        .payment-group-border {
+            border: 1px solid #b0b8c4;
+            /* Softer border */
+            border-radius: 4px;
+            margin-top: 10px;
+            overflow: hidden;
+            /* To clip the table corners */
+        }
+
+        .payid-separator {
+            font-size: 12px;
+            font-style: italic;
+            color: #E65100;
+            /* Darker Orange */
+            text-align: center;
+            margin: 15px 0 10px 0;
+        }
+
+        .payment-reference-text {
+            font-size: 12px;
+            margin-top: 15px;
+            font-style: italic;
+            /* [NEW v6290 Task 3] Added text wrapping */
+            white-space: normal;
+            word-wrap: break-word;
+        }
+
+        /* End of new payment styles */
+
+
+        .notes-terms-box {
+            width: 100%;
+            margin-top: 30px;
+            padding: 20px;
+            background-color: #f9f9ff;
+            /* Lighter background */
+            border: 1px solid #b0b8c4;
+            /* Softer border */
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+
+        .notes-terms-box h4 {
+
+            margin-top: 0;
+            color: var(--primary-color);
+        }
+
+        .notes-terms-box p {
+            margin-bottom: 0;
+            font-size: 14px;
+            line-height: 1.6;
+            white-space: normal;
+            word-wrap: break-word;
+        }
+
+        .footer {
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid var(--border-color);
+            font-size: 12px;
+            color: #888;
+            text-align: center;
+        }
+
+        .terms {
+            margin-top: 20px;
+        }
+
+
+
+        @media (max-width: 768px) {
+            .quotation-container {
+                padding: 10px;
+            }
+
+            .quotation-inner-wrapper {
+                padding: 20px;
+            }
+
+            .header {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            /* [MODIFIED v6290 Task 2] */
+            .quotation-meta {
+                order: 2;
+            }
+
+            /* [MODIFIED v6290 Task 1 & 2] Swapped order and aligned right */
+            .company-details {
+                order: 1;
+                margin-top: 20px;
+                text-align: right;
+            }
+
+            .company-details,
+            .quotation-meta {
+                /* [MODIFIED v6290 Task 2] Remove forced left align */
+                /* text-align: left; */
+            }
+
+            .company-details p {
+                /* [MODIFIED v6290 Task 2] Align text right */
+                justify-content: flex-end;
+            }
+
+            .company-details .abn-line {
+                padding-right: 0;
+            }
+
+            .company-details .icon {
+                /* [MODIFIED v6291] 步驟 1: 強制靠右 */
+                order: 1;
+                margin-left: 8px;
+                margin-right: 0;
+            }
+
+            /* [FIX v6291] 步驟 6 & 步驟 7: 調整手機版布局 */
+            .summary-payment-wrapper {
+                flex-direction: column-reverse;
+                /* 先顯示總結 */
+                gap: 20px;
+                /* 手機版間距 */
+                padding: 0;
+                /* 手機版移除外層 padding */
+                border: none;
+                /* 手機版移除外層邊框 */
+            }
+
+            .summary-payment-wrapper>div {
+                padding: 0;
+                /* 移除子元素的 padding */
+            }
+
+
+            /* [MODIFIED v6290 Task 4] Added min-width and box-sizing */
+            .payment-info,
+            .summary-section {
+                width: 100%;
+                box-sizing: border-box;
+                min-width: 280px;
+                /* X */
+            }
+
+            /* [MODIFIED v6290 Task 4] Added min-width and box-sizing */
+            .notes-terms-box {
+                width: 100%;
+                min-width: 280px;
+                /* X */
+                box-sizing: border-box;
+            }
+
+            .table-scroll-wrapper {
+                overflow-x: auto;
+            }
+
+            /* --- [MODIFIED] --- */
+            /* This is the "Card Mode" CSS you want to avoid during Print */
+            .items-table {
+                border: none;
+                display: block;
+                table-layout: auto;
+            }
+
+            .items-table thead {
+                border: none;
+                clip: rect(0 0 0 0);
+                height: 1px;
+                margin: -1px;
+                overflow: hidden;
+                padding: 0;
+                position: absolute;
+                width: 1px;
+            }
+
+            .items-table tr {
+                display: block;
+                margin-bottom: 15px;
+                border: 1px solid var(--border-color);
+                border-radius: 5px;
+                padding: 0;
+                box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+                min-width: 280px;
+                /* This is X */
+            }
+
+            .items-table td {
+                display: flex;
+                justify-content: space-between;
+                padding: 10px 15px;
+                border: none;
+                border-bottom: 1px solid var(--border-color);
+                text-align: right;
+            }
+
+            .items-table tr td:last-child {
+                border-bottom: none;
+            }
+
+            .items-table td:before {
+
+                content: attr(data-label);
+                font-weight: 600;
+                text-align: left;
+                padding-right: 15px;
+                color: #333;
+                flex-shrink: 0;
+            }
+
+            .items-table td:first-of-type {
+                background-color: var(--primary-color);
+                color: white;
+                font-weight: bold;
+                border-radius: 4px 4px 0 0;
+            }
+
+            .items-table td:first-of-type::before {
+                color: white;
+            }
+
+        }
+
+        /* [MODIFIED v6285 Print Optimization] */
+        @media print {
+
+            /* Force background colors and remove action bar (Problem 1 & 2) */
+            * {
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+
+            #action-bar {
+                display: none !important;
+            }
+
+            /* [FIX] Reset body padding/margin, but allow containers to use their own */
+            body {
+                background-color: #fff;
+                padding: 0;
+                margin: 0;
+            }
+
+
+            /* [FIX] Only remove shadows, DO NOT remove padding or border */
+            .quotation-container,
+            .quotation-inner-wrapper {
+                box-shadow: none !important;
+            }
+
+            /* Prevent content breaking (v6281 Plan) */
+            .items-table tr,
+
+            .summary-section,
+            .payment-info,
+            .notes-terms-box,
+            .summary-payment-wrapper {
+                /* [FIX v6291] target div */
+                page-break-inside: avoid;
+            }
+
+            /* --- [NEW] Print Override for Mobile Card View --- */
+            /* This block is from the previous analysis (Task 3) */
+            /* 強制恢復表格佈局 */
+            .items-table {
+                display: table !important;
+                table-layout: fixed !important;
+                /* 確保表格寬度正確 */
+            }
+
+            /* 強制顯示表格標頭 */
+            .items-table thead {
+                display: table-header-group !important;
+                /* 裝置為標頭 */
+                position: static !important;
+                height: auto !important;
+                margin: 0 !important;
+                padding: 0 !important;
+                width: auto !important;
+            }
+
+            /* 強制恢復表格行 */
+            .items-table tr {
+                display: table-row !important;
+                margin-bottom: 0 !important;
+                border: 1px solid #333 !important;
+                /* 恢復原始邊框 */
+                box-shadow: none !important;
+                min-width: 0 !important;
+                /* [FIX] Reset min-width for print */
+            }
+
+            /* 強制恢復表格儲存格 */
+            .items-table td {
+                display: table-cell !important;
+                justify-content: flex-start !important;
+                /* 恢復預設 */
+                padding: 10px 12px !important;
+                /* 恢復間距 */
+                border-bottom: 1px solid #333 !important;
+                /* 恢復原始邊框 */
+            }
+
+            /* 強制隱藏手機版標籤 */
+            .items-table td:before {
+                content: none !important;
+                display: none !important;
+            }
+
+            /* [MODIFIED v6290 Task 2] Ensure these elements don't have min-width in print */
+            .payment-info,
+            .summary-section,
+            .notes-terms-box {
+                min-width: 0 !important;
+            }
+
+            /* --- [NEW v6291] Print Style Overrides for Mobile (PDF Fix) --- */
+            .items-table th {
+                text-align: left !important;
+                font-size: 90% !important;
+                /* 1.F */
+                padding: 10px 8px !important;
+                /* Tighter padding */
+            }
+
+            .items-table td {
+                text-align: left !important;
+                /* 1.C */
+                padding: 10px 8px !important;
+                /* Tighter padding for overflow */
+            }
+
+            .items-table th.align-right,
+            .items-table td.align-right {
+                text-align: right !important;
+            }
+
+            .items-table th:nth-child(1) {
+                /* 1.A (header) */
+                text-align: center !important;
+            }
+
+            .items-table td:first-child {
+                /* 1.A (cell) & 2 */
+                text-align: center !important;
+                background-color: #ffffff !important;
+                color: var(--text-color) !important;
+            }
+
+            .items-table th:nth-child(2) {
+                /* 1.B */
+                text-align: center !important;
+            }
+
+            /* --- [NEW v6291] (修復 PDF 步驟 4.A, 4.B) --- */
+            /* 4.B: Total, Deposit, Balance 三行淡黃色底 */
+            .summary-details tbody tr:nth-last-child(-n+3) {
+                background-color: #FFFFE0 !important;
+                /* Light Yellow */
+            }
+
+            /* 4.A: Balance 改為一般字重 */
+            .summary-details tr:last-child td,
+            .summary-details tr:last-child strong {
+                font-weight: normal !important;
+                color: #333 !important;
+            }
+
+            /* --- [END FIX v6291] --- */
+        }
+    </style>
+</head>
+
+<body>
+    <div class="quotation-container">
+        <div class="quotation-inner-wrapper">
+
+
+            <header class="header">
+                <div class="quotation-meta">
+                    <h2>QUOTATION</h2>
+                    <p><strong>Quote No:</strong> {{quoteId}}</p>
+                    <p><strong>Issue Date:</strong> {{issueDate}}</p>
+                    <p><strong>Due Date:</strong> {{dueDate}}</p>
+                </div>
+                <div class="company-details">
+                    <h1>EZ Blinds & Shutters</h1>
+                    <p class="abn-line">ABN: 52 62 74
+                        20 777</p>
+                    <p>U11 / 271 Wells Rd, Chelsea Heights<span class="icon">&#128205;</span></p>
+                    <p>
+                        <span>0466 965 168<span class="icon">&#128222;</span></span>
+                    </p>
+                    <p>
+                        <span>ezblinds@ezbns.com.au<span class="icon">&#128231;</span></span>
+                    </p>
+                    <p>www.ezbns.com.au<span class="icon">&#127760;</span></p>
+                </div>
+
+            </header>
+
+            <main>
+                <section class="customer-info">
+                    <p>{{{customerInfoHtml}}}</p>
+                </section>
+
+                <section class="items-section">
+                    <div class="table-scroll-wrapper">
+                        <table class="items-table" border="1" cellpadding="0" cellspacing="0">
+                            <colgroup>
+                                <col style="width: 8%;">
+                                <col style="width: 34%;">
+                                <col style="width: 14.4%;">
+                                <col style="width: 21.8%;">
+                                <col style="width: 21.8%;">
+                            </colgroup>
+                            <thead>
+                                <tr>
+                                    <th>NO</th>
+                                    <th>Description</th>
+                                    <th class="align-right">QTY</th>
+                                    <th class="align-right">Price</th>
+                                    <th class="align-right">Discounted Price</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {{{itemsTableBody}}}
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <div class="summary-payment-wrapper">
+
+                    <div>
+                        <section class="payment-info">
+                            <h4>Payment Method</h4>
+
+                            <div class="payment-group-border">
+                                <table class="payment-table">
+                                    <tbody>
+                                        <tr>
+                                            <td>Bank</td>
+                                            <td>CBA</td>
+                                        </tr>
+                                        <tr>
+                                            <td>BSB</td>
+                                            <td>0 6 2 &nbsp;&nbsp; 6 9 2</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Account</td>
+                                            <td>4 5 7 0 &nbsp;&nbsp; 8 8 7 7</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Name</td>
+                                            <td>Alphalead &nbsp;Pty &nbsp;Ltd</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            <p class="payid-separator">Or, pay securely via our ACN PayID.</p>
+
+                            <div class="payment-group-border">
+                                <table class="payment-table">
+                                    <tbody>
+                                        <tr class="payid-row">
+                                            <td>PayID</td>
+                                            <td>6 2 7 &nbsp;&nbsp; 4 2 0 &nbsp;&nbsp; 7 7 7</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            <p class="payment-reference-text"><em>Please leave your Ph. number as Ref. in the
+                                    transaction.</em></p>
+                        </section>
+                    </div>
+                    <div>
+                        <section class="summary-section">
+                            <div class="summary-details">
+                                <table>
+                                    <tbody>
+                                        <tr>
+                                            <td class="summary-label">Subtotal</td>
+                                            <td class="summary-value">{{subtotal}}</td>
+                                        </tr>
+                                        <tr class="grand-total">
+                                            <td class="summary-label">Our Offer</td>
+                                            <td class="summary-value">{{ourOffer}}</td>
+                                        </tr>
+
+                                        {{{gstRowHtml}}}
+
+                                        <tr class="grand-total" style="color: #FF69B4; border-color: #FF69B4;">
+                                            <td class="summary-label" style="color: #FF69B4;">Total</td>
+                                            <td class="summary-value" style="color: #FF69B4;">{{grandTotal}}
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="summary-label">Deposit</td>
+                                            <td class="summary-value">{{deposit}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="summary-label"><strong>Balance</strong></td>
+                                            <td class="summary-value"><strong>{{balance}}</strong></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+
+                            </div>
+                        </section>
+                    </div>
+                </div>
+
+                <section class="notes-terms-box">
+                    <h4>General Notes</h4>
+
+                    <p>{{{generalNotes}}}</p>
+                </section>
+
+                <section class="terms notes-terms-box">
+                    <h4>Terms & Conditions</h4>
+                    {{{termsAndConditions}}}
+
+                </section>
+
+            </main>
+
+            <footer class="footer">
+                <p>Thank you for your business!</p>
+                <p><strong>EZ Blinds & Shutters</strong></p>
+            </footer>
+
+        </div>
+    </div>
+</body>
+
+</html>

@@ -1,0 +1,48 @@
+/* File: 04-core-code/ui/tabs/k2-tab/k2-tab.css */
+
+/* [REMOVED] (Phase 3 Cleanup) K2 (Fabric) specific styles moved from left-panel.css */
+
+/*
+.panel-input-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+}
+
+.panel-input-table th,
+.panel-input-table td {
+    border: 1px solid #b0b8c4;
+    padding: 4px 6px;
+    font-size: 0.9em;
+    text-align: center;
+}
+
+.panel-input-table th {
+    background-color: #e5e7eb;
+    font-weight: bold;
+}
+
+.panel-input {
+    width: 100%;
+    box-sizing: border-box;
+    border: 1px solid #b0b8c4;
+    padding: 5px;
+    border-radius: 3px;
+    font-size: 1em;
+}
+
+.panel-input:disabled {
+    background-color: #e9ecef;
+    cursor: not-allowed;
+}
+*/
+
+/* --- K2 Light-Filter Feature Styles --- */
+.results-table td.lf-selection-highlight {
+    background-color: #fffacd;
+}
+
+.results-table td.is-lf-modified {
+    background-color: #ffccd5;
+    box-shadow: inset 0 0 0 1px #e5a0aa;
+}
