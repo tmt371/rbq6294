@@ -372,6 +372,7 @@ export class
                 // [MODIFIED] (v6294 N&C) (實作步驟 2) Replace focus logic with SSet's logic
                 const confirmButton = document.querySelector('.dialog-overlay .primary-confirm-button');
 
+                // [FIX] (v6294 Bug Fix) Change from (id) to (id, index)
                 inputIds.forEach((id, index) => {
                     const input = document.getElementById(id);
                     if (input) {
@@ -556,7 +557,8 @@ export class
                     }
                 };
 
-                inputIds.forEach((id) => {
+                // [FIX] (v6294 Bug Fix) Change from (id) to (id, index)
+                inputIds.forEach((id, index) => {
                     const input = document.getElementById(id);
                     if (input) {
                         input.addEventListener('keydown', (e) => {
@@ -737,6 +739,7 @@ export class
                 // 6. (實作步驟 4) Setup Enter/Blur key navigation
                 const confirmButton = document.querySelector('.dialog-overlay .primary-confirm-button');
 
+                // [FIX] (v6294 Bug Fix) Change from (id) to (id, index)
                 inputIds.forEach((id, index) => {
                     const input = document.getElementById(id);
                     if (input) {
