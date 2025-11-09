@@ -43,6 +43,7 @@ export const EVENTS = {
     USER_REQUESTED_NC_DIALOG: 'userRequestedNCDialog',
     USER_REQUESTED_LF_DIALOG: 'userRequestedLFDialog', // [NEW] (Phase 2)
     USER_REQUESTED_SSET_DIALOG: 'userRequestedSSetDialog', // [NEW] (Phase 3)
+    USER_TOGGLED_K2_MODE: 'userToggledK2Mode', // [NEW] (v6294)
     // [REMOVED] (Phase 3 Cleanup) Obsolete panel events
     // PANEL_INPUT_ENTER_PRESSED: 'panelInputEnterPressed',
     // PANEL_INPUT_BLURRED: 'panelInputBlurred',

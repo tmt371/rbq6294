@@ -3,18 +3,20 @@
 /**
  * @description
  * AppContext 是此應用程式的「依賴注入容器」(DI Container)。
- * 它的職責是「建立」和「註冊」所有服務 (Services) 和 UI 元件 (Components)。
- * * 1. 建立 Services (例如 StateService, CalculationService)。
+ * 它的職責是「建立」並註冊「所有服務 (Services) 和 UI 元件 (Components)」。
+ * 1. 建立 Services (例如 StateService, CalculationService)。
  * 2. 建立 UI Components (例如 QuickQuoteView, RightPanelComponent)。
- * 3. 將這些實例 (instances) 儲存在一個中央登錄檔 (this.instances) 中。
- * * 這種模式的好處 (依賴注入):
- * - 「解耦」: 元件不需要知道如何「建立」它們的依賴。
- * 例如，`AppController` 不需要 `new WorkflowService()`。它只需要從 AppContext「請求」一個 `workflowService` 實例。
- * - 「可測試性」: 在進行單元測試時，我們可以輕易地用「假的」(mock) 服務替換掉 AppContext 中的真實服務。
- * - 「集中管理」: 所有物件的建立邏輯都集中在此處，易於管理和維護。
- * * Example:
+ * 3. 將這些實例 (instances) 保存在一個中央登記處 (this.instances) 中。
+ *
+ * 這種模式的好處 (依賴注入):
+ * - 「解耦」：元件不需要知道「如何」建立「它」的依賴。
+ * 例如，`AppController` 不需要 `new WorkflowService()`，它只需要向 AppContext「請求」一個 `workflowService` 實例。
+ * - 「可測試性」：在進行單元測試時，我們可以輕易地「模擬」(mock) 並替換 AppContext 中的真實服務。
+ * - 「集中管理」：所有物件的建立邏輯都集中在此處，易於管理和維護。
+ *
+ * Example:
  * `main.js` (組裝廠) 會請求 AppContext 建立所有零件 (Services, Components)，
- * 然後將這些零件 (例如 `quickQuoteView`, `appController`) 交給 `UIManager` (總指揮) 進行組裝和渲染。
+ * 然後將這些零件 (例如 `quickQuoteView`, `appController`) 交給 `UIManager` (總指揮) 去組裝並渲染。
  * */
 export class AppContext {
     constructor() {
@@ -23,7 +25,7 @@ export class AppContext {
 
     /**
      * 註冊一個實例到容器中。
-     * @param {string} name - 實例的唯一名稱 (鍵)。
+     * @param {string} name - 實例的唯一名稱 (key)
      * @param {object} instance - 要註冊的實例。
      */
     register(name, instance) {
@@ -32,7 +34,7 @@ export class AppContext {
     }
 
     /**
-     * 從容器中獲取一個實例。
+     * 從容器中取得一個實例。
      * @param {string} name - 要獲取的實例名稱。
      * @returns {object} - 註冊的實例。
      */
@@ -114,6 +116,9 @@ export class AppContext {
         // --- [NEW] Instantiate K2 Tab Components (Phase 5 Refactor) ---
         const k2TabInputHandler = new K2TabInputHandler({ eventAggregator });
         this.register('k2TabInputHandler', k2TabInputHandler);
+        // [NEW] (v6294) Instantiate the new K2 component
+        const k2TabComponent = new K2TabComponent();
+        this.register('k2TabComponent', k2TabComponent);
 
         // --- [NEW] Instantiate K3 Tab Components (Phase 2 Refactor) ---
         const k3TabInputHandler = new K3TabInputHandler({ eventAggregator });
@@ -273,6 +278,7 @@ import { DOM_IDS } from './config/constants.js'; // [MODIFIED]
 import { K1TabInputHandler } from './ui/tabs/k1-tab/k1-tab-input-handler.js';
 import { K1TabComponent } from './ui/tabs/k1-tab/k1-tab-component.js';
 import { K2TabInputHandler } from './ui/tabs/k2-tab/k2-tab-input-handler.js'; // [NEW]
+import { K2TabComponent } from './ui/tabs/k2-tab/k2-tab-component.js'; // [NEW] (v6294)
 import { K3TabInputHandler } from './ui/tabs/k3-tab/k3-tab-input-handler.js';
 import { K3TabComponent } from './ui/tabs/k3-tab/k3-tab-component.js';
 import { K4TabInputHandler } from './ui/tabs/k4-tab/k4-tab-input-handler.js';

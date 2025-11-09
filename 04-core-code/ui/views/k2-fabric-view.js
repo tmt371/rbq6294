@@ -22,7 +22,7 @@ export class
         // [NEW] Listen for the new N&C dialog event
         this.eventAggregator.subscribe(EVENTS.USER_REQUESTED_NC_DIALOG, () => this.handleNCDialogRequest());
         // [NEW] (Phase 2) Listen for the new LF dialog event
-        this.eventAggregator.subscribe(EVENTS.USER_REQUESTED_LF_DIALOG, () => this.handleLFDialogRequest());
+        this.eventAggregator.subscribe(EVENTS.USER_REQUESTED_LF_DIALOG, () => this._showLFDialog()); // [MODIFIED] (v6294) Renamed for clarity
         // [NEW] (Phase 3) Listen for the new SSet dialog event
         this.eventAggregator.subscribe(EVENTS.USER_REQUESTED_SSET_DIALOG, () => this.handleSSetDialogRequest());
 
@@ -66,44 +66,102 @@ export class
         const item = this._getItems()[rowIndex];
         if (!item || (item.width === null && item.height === null)) return; // Ignore empty rows
 
-        // [MODIFIED] (Phase 3 Cleanup) Only LF_DELETE_SELECT logic remains
+        // [MODIFIED] (v6294) This handler now manages selection for both LF and LFD modes.
         if (activeEditMode === 'K2_LF_DELETE_SELECT') {
-
+            // --- LFD Mode (Select items to delete) ---
             const { lfModifiedRowIndexes } = this._getState().quoteData.uiMetadata;
             if (!lfModifiedRowIndexes.includes(rowIndex)) {
                 this.eventAggregator.publish(EVENTS.SHOW_NOTIFICATION, { message: 'Only items with a Light-Filter setting (pink background) can be selected for deletion.', type: 'error' });
                 return;
             }
+            // Use the dedicated LF selection state for LFD mode
             this.stateService.dispatch(uiActions.toggleLFSelection(rowIndex));
 
+        } else if (activeEditMode === 'K2_LF_MODE') {
+            // --- LF Mode (Select items to apply to) ---
+            // (實作步驟 3) Use the main multi-select state
+            this.stateService.dispatch(uiActions.toggleMultiSelectSelection(rowIndex));
         }
         // [REMOVED] (Phase 3 Cleanup) K2_LF_SELECT logic removed
         // [REMOVED] (Phase 3 Cleanup) K2_SSET_SELECT logic removed
     }
 
-    // [REMOVED] (Phase 3 Cleanup)
-    // handleLFEditRequest() { ... }
+    // [NEW] (v6294) Entry point for mode-switching buttons (LF and LFD)
+    handleModeToggle({ mode }) {
+        if (mode === 'LF') {
+            this._handleLFModeToggle();
+        } else if (mode === 'LFD') {
+            this._handleLFDModeToggle();
+        }
+    }
 
-    handleLFDeleteRequest() {
+    // [NEW] (v6294) Implements "click-select-click" for LF button
+    _handleLFModeToggle() {
+        const { activeEditMode } = this._getState().ui;
+
+        if (activeEditMode === 'K2_LF_MODE') {
+            // --- This is the SECOND click (Execute) ---
+            const { multiSelectSelectedIndexes } = this._getState().ui;
+
+            // (實作步驟 6)
+            if (multiSelectSelectedIndexes.length === 0) {
+                this.eventAggregator.publish(EVENTS.SHOW_NOTIFICATION, { message: 'LF mode cancelled. No items selected.' });
+                this._exitAllK2Modes(); // Cancel the mode
+                return;
+            }
+
+            // (實作步驟 4)
+            this._showLFDialog(); // Show the dialog
+
+        } else {
+            // --- This is the FIRST click (Enter Mode) ---
+            // (實作步驟 1 - 檢查)
+            const items = this._getItems();
+            const eligibleTypes = ['B2', 'B3', 'B4'];
+            const hasEligibleItems = items.some(item =>
+                item.width && item.height && eligibleTypes.includes(item.fabricType)
+            );
+
+            if (!hasEligibleItems) {
+                this.eventAggregator.publish(EVENTS.SHOW_NOTIFICATION, { message: 'LF is only applicable for B2, B3, and B4 items.' });
+                return;
+            }
+
+            // (實作步驟 1 - 進入模式)
+            this._exitAllK2Modes(); // Ensure no other mode is active
+            this.stateService.dispatch(uiActions.setActiveEditMode('K2_LF_MODE'));
+            // (實作步驟 2)
+            this.eventAggregator.publish(EVENTS.SHOW_NOTIFICATION, { message: 'Please select items from the main table.' });
+        }
+    }
+
+    // [REFACTORED] (v6294) Renamed from handleLFDeleteRequest to _handleLFDModeToggle
+    _handleLFDModeToggle() {
         const { activeEditMode } = this._getState().ui;
 
         if (activeEditMode === 'K2_LF_DELETE_SELECT') {
+            // --- This is the SECOND click (Execute) ---
             const { lfSelectedRowIndexes } = this._getState().ui;
             if (lfSelectedRowIndexes.length > 0) {
-
                 this.stateService.dispatch(quoteActions.removeLFProperties(lfSelectedRowIndexes));
                 this.stateService.dispatch(quoteActions.removeLFModifiedRows(lfSelectedRowIndexes));
                 this.eventAggregator.publish(EVENTS.SHOW_NOTIFICATION, { message: 'Light-Filter settings have been cleared.' });
             }
             this._exitAllK2Modes();
         } else {
-            // Clear other K2 mode selections
-            this.stateService.dispatch(uiActions.clearLFSelection());
-            // [REMOVED] (Phase 3 Cleanup) this.stateService.dispatch(uiActions.clearSSetSelection());
+            // --- This is the FIRST click (Enter Mode) ---
+            this._exitAllK2Modes(); // Ensure no other mode is active
             this.stateService.dispatch(uiActions.setActiveEditMode('K2_LF_DELETE_SELECT'));
             this.eventAggregator.publish(EVENTS.SHOW_NOTIFICATION, { message: 'Please select the roller blinds for which you want to cancel the Light-Filter fabric setting. After selection, click the LF-Del button again.' });
         }
     }
+
+
+    // [REMOVED] (Phase 3 Cleanup)
+    // handleLFEditRequest() { ... }
+
+    // [REMOVED] (v6294) This is now handled by _handleLFDModeToggle
+    // handleLFDeleteRequest() { ... }
 
     // [REMOVED] (Phase 3 Cleanup) Old Handler for the SSet button
     // handleSSetRequest() { ... }
@@ -306,10 +364,11 @@ export class
         });
     }
 
-    // [MODIFIED] (Stage 2.A) Handler for the LF Dialog request
-    handleLFDialogRequest() {
-        // 1. Lock the UI
-        this.stateService.dispatch(uiActions.setModalActive(true));
+    // [MODIFIED] (v6294) Renamed from handleLFDialogRequest to _showLFDialog
+    // Now reads selection from state instead of checking on its own.
+    _showLFDialog() {
+        // 1. Lock the UI (already locked by _handleLFModeToggle)
+        // this.stateService.dispatch(uiActions.setModalActive(true));
 
         // 2. Pre-processing: Check for eligible types IN THE SELECTION
         const { ui, quoteData } = this._getState();
@@ -317,16 +376,16 @@ export class
         const { lfModifiedRowIndexes } = quoteData.uiMetadata;
         const items = this._getItems();
 
-        // 2A. Check if anything is selected
+        // 2A. Check if anything is selected (This is already checked by _handleLFModeToggle, but we double-check)
         if (multiSelectSelectedIndexes.length === 0) {
             this.eventAggregator.publish(EVENTS.SHOW_NOTIFICATION, { message: 'Please select items from the main table first.' });
-            this.stateService.dispatch(uiActions.setModalActive(false));
+            this._exitAllK2Modes(); // Cancel mode
             return;
         }
 
         const eligibleTypes = ['B2', 'B3', 'B4'];
 
-        // 2B. Filter the selection for eligible items
+        // 2B. (實作步驟 5) Filter the selection for eligible items
         const eligibleIndexes = multiSelectSelectedIndexes.filter(index => {
             const item = items[index];
             return item && item.width && item.height &&
@@ -335,11 +394,9 @@ export class
         });
 
         if (eligibleIndexes.length === 0) {
-            const msg = multiSelectSelectedIndexes.length > 0
-                ? 'The selection contains no eligible B2, B3, or B4 items, or they are already set as LF.'
-                : 'No non-LF items available to edit.';
+            const msg = 'The selection contains no eligible B2, B3, or B4 items, or they are already set as LF.';
             this.eventAggregator.publish(EVENTS.SHOW_NOTIFICATION, { message: msg });
-            this.stateService.dispatch(uiActions.setModalActive(false)); // Unlock UI
+            this._exitAllK2Modes(); // Cancel mode
             return;
         }
 
@@ -384,7 +441,6 @@ export class
                                     // Apply ONLY to eligible selected indexes
                                     this.stateService.dispatch(quoteActions.batchUpdateLFProperties(eligibleIndexes, fabricNameWithPrefix, fColor));
                                     this.stateService.dispatch(quoteActions.addLFModifiedRows(eligibleIndexes));
-                                    this.stateService.dispatch(uiActions.clearMultiSelectSelection()); // Clear selection
                                     this.eventAggregator.publish(EVENTS.SHOW_NOTIFICATION, { message: `Light-Filter applied to ${eligibleIndexes.length} items.` });
                                 } else {
                                     this.eventAggregator.publish(EVENTS.SHOW_NOTIFICATION, { message: 'No changes applied. Both F-Name and F-Color are required.', type: 'error' });
@@ -395,7 +451,7 @@ export class
                             } finally {
                                 // Only unlock if successful
                                 if (document.getElementById(fNameId).value && document.getElementById(fColorId).value) {
-                                    this.stateService.dispatch(uiActions.setModalActive(false)); // Unlock UI
+                                    this._exitAllK2Modes(); // Clean up mode and selection
                                 }
                             }
                             // Close dialog only if successful
@@ -406,36 +462,53 @@ export class
                         type: 'button', text: 'Cancel', className: 'secondary', colspan: 1,
                         callback: () => {
                             // 5.B Post-processing (Cancel)
-                            this.stateService.dispatch(uiActions.setModalActive(false)); // Unlock UI
+                            // (實作步驟 7)
+                            this._exitAllK2Modes(); // Clean up mode and selection
                             return true; // Close dialog
                         }
                     }
                 ]
             ],
             onOpen: () => {
-                // 6. Setup Enter key navigation
-                inputIds.forEach((id, index) => {
+                // 6. (實作步驟 4) Setup Enter/Blur key navigation
+                const fNameInput = document.getElementById(fNameId);
+                const fColorInput = document.getElementById(fColorId);
+                const confirmButton = document.querySelector('.dialog-overlay .primary-confirm-button');
+
+                const focusNext = (currentId) => {
+                    if (currentId === fNameId) {
+                        fColorInput?.focus();
+                    } else if (currentId === fColorId) {
+                        confirmButton?.focus();
+                    }
+                };
+
+                inputIds.forEach((id) => {
                     const input = document.getElementById(id);
                     if (input) {
                         input.addEventListener('keydown', (e) => {
-                            if (e.key === 'Enter') {
+                            if (e.key === 'Enter' || e.key === 'Tab') {
                                 e.preventDefault();
-                                const nextId = inputIds[index + 1];
-                                if (nextId) {
-                                    document.getElementById(nextId)?.focus();
-                                } else {
-                                    const confirmButton = document.querySelector('.dialog-overlay .primary-confirm-button');
-                                    confirmButton?.focus();
-                                }
+                                focusNext(id);
                             }
                         });
+                        input.addEventListener('blur', () => focusNext(id));
                     }
                 });
+
+                if (confirmButton) {
+                    confirmButton.addEventListener('keydown', (e) => {
+                        if (e.key === 'Enter') {
+                            e.preventDefault();
+                            confirmButton.click();
+                        }
+                    });
+                }
+
                 if (inputIds.length > 0) {
                     setTimeout(() => {
-                        const firstInput = document.getElementById(inputIds[0]);
-                        firstInput?.focus();
-                        firstInput?.select();
+                        fNameInput?.focus();
+                        fNameInput?.select();
                     }, 50);
                 }
             }
@@ -600,7 +673,7 @@ export class
 
     _exitAllK2Modes() {
         this.stateService.dispatch(uiActions.setActiveEditMode(null));
-        this.stateService.dispatch(uiActions.clearMultiSelectSelection());
+        this.stateService.dispatch(uiActions.clearMultiSelectSelection()); // (步驟 6 & 7)
         this.stateService.dispatch(uiActions.clearLFSelection());
         // [REMOVED] (Phase 3 Cleanup) this.stateService.dispatch(uiActions.clearSSetSelection());
 

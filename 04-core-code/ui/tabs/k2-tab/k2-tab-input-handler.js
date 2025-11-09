@@ -24,14 +24,15 @@ export class K2TabInputHandler {
         const lfButton = document.getElementById('btn-light-filter');
         if (lfButton) {
             lfButton.addEventListener('click', () => {
-                // [MODIFIED] (Phase 2) Changed event to trigger new dialog flow
-                this.eventAggregator.publish(EVENTS.USER_REQUESTED_LF_DIALOG);
+                // [MODIFIED] (v6294) Changed event to trigger mode toggle
+                this.eventAggregator.publish(EVENTS.USER_TOGGLED_K2_MODE, { mode: 'LF' });
             });
         }
         const lfDelButton = document.getElementById('btn-lf-del');
         if (lfDelButton) {
             lfDelButton.addEventListener('click', () => {
-                this.eventAggregator.publish(EVENTS.USER_REQUESTED_LF_DELETE_MODE);
+                // [MODIFIED] (v6294) Changed event to trigger mode toggle
+                this.eventAggregator.publish(EVENTS.USER_TOGGLED_K2_MODE, { mode: 'LFD' });
             });
         }
 

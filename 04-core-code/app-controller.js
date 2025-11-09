@@ -63,7 +63,6 @@ export class AppController {
                 this.detailConfigView[handlerName](data);
             }
         };
-
         this.eventAggregator.subscribe(EVENTS.TABLE_CELL_CLICKED, (data) => {
             const { ui } = this.stateService.getState();
             if (ui.currentView === 'QUICK_QUOTE') {
@@ -87,6 +86,8 @@ export class AppController {
         // this.eventAggregator.subscribe(EVENTS.PANEL_INPUT_ENTER_PRESSED, (data) => delegate('handlePanelInputEnter', data));
         // this.eventAggregator.subscribe(EVENTS.PANEL_INPUT_BLURRED, (data) => delegate('handlePanelInputBlur', data));
         this.eventAggregator.subscribe(EVENTS.LOCATION_INPUT_ENTER_PRESSED, (data) => delegate('handleLocationInputEnter', data));
+        // [NEW] (v6294) Add subscription for K2 mode toggle
+        this.eventAggregator.subscribe(EVENTS.USER_TOGGLED_K2_MODE, (data) => delegate('handleModeToggle', data));
         // [REMOVED] (Phase 3 Cleanup) Obsolete K2 mode events
         // this.eventAggregator.subscribe(EVENTS.USER_REQUESTED_LF_EDIT_MODE, () => delegate('handleLFEditRequest'));
         this.eventAggregator.subscribe(EVENTS.USER_REQUESTED_LF_DELETE_MODE, () => delegate('handleLFDeleteRequest'));

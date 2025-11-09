@@ -11,13 +11,14 @@ import { EVENTS, DOM_IDS } from '../config/constants.js';
 import { LeftPanelTabManager } from './left-panel-tab-manager.js';
 
 export class UIManager {
-    constructor({ appElement, eventAggregator, calculationService, rightPanelComponent, leftPanelTabManager, k1TabComponent, k3TabComponent, k4TabComponent, k5TabComponent }) { // [MODIFIED]
+    constructor({ appElement, eventAggregator, calculationService, rightPanelComponent, leftPanelTabManager, k1TabComponent, k2TabComponent, k3TabComponent, k4TabComponent, k5TabComponent }) { // [MODIFIED]
         this.appElement = appElement;
         this.eventAggregator = eventAggregator;
         this.calculationService = calculationService;
         this.rightPanelComponent = rightPanelComponent; // [MODIFIED] Receive instance
         this.leftPanelTabManager = leftPanelTabManager; // [NEW] Store instance
         this.k1TabComponent = k1TabComponent; // [NEW] Store instance
+        this.k2TabComponent = k2TabComponent; // [NEW] (v6294) Store instance
         this.k3TabComponent = k3TabComponent; // [NEW] Store instance
         this.k4TabComponent = k4TabComponent; // [NEW] Store instance
         this.k5TabComponent = k5TabComponent; // [NEW] Store instance
@@ -150,7 +151,10 @@ export class UIManager {
         if (this.k1TabComponent) {
             this.k1TabComponent.render(state.ui); // Renders K1
         }
-
+        // [NEW] (v6294) Render K2 component
+        if (this.k2TabComponent) {
+            this.k2TabComponent.render(state.ui); // Renders K2
+        }
         if (this.k3TabComponent) {
             this.k3TabComponent.render(state.ui); // Renders K3
         }
